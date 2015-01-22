@@ -1,1 +1,42 @@
-<h1>HI</h1>
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>Perjus Release Form</title>
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+	</head>
+	<body>
+		<div class="container-fluid">
+			<h1>Perjus Release Form</h1>
+			<form>
+				<div id="release">
+					<div class="form-group">
+						<label for="firstName">First Name</label>
+						<input type="text" class="form-control" id="firstName" placeholder="First Name">
+					</div>
+					<div class="form-group">
+						<label for="lastName">Last Name</label>
+						<input type="text" class="form-control" id="lastName" placeholder="Last Name">
+					</div>
+					<div class="form-group">
+						<label for="emailAddress">Email</label>
+						<input type="email" class="form-control" id="emailAddress" placeholder="Email">
+					</div>
+					<div class="form-group">
+						<label for="emailAddressConfirmation">Email Confirmation</label>
+						<input type="email" class="form-control" id="emailAddressConfirmation" placeholder="Email Confirmation">
+					</div>
+					<div class="form-group">
+						<label for="downloadLink">Download Link (Dropbox, etc.)</label>
+						<input type="url" class="form-control" id="downloadLink" placeholder="Download Link">
+					</div>
+				</div>
+				<button id="add-work-btn" type="Button" class="btn btn-default">+ Add Work</button>
+				<button type="submit" class="btn btn-default">Submit</button>
+			</form>
+		</div>
+		<script src="helper.js"></script>
+	</body>
+</html>
