@@ -38,7 +38,7 @@ function setFormClickListeners() {
 		var modelIndex = 0;
 		var tempWorkIndex = workIndex;
 		console.log(workIndex.toString());
-		$("#release").after(workSnippet(workIndex));
+		$("#add-work-btn-wrapper").after(workSnippet(workIndex));
 		
 		$("#add-model-btn" + tempWorkIndex.toString()).click(function() {
 			var tempModelIndex = modelIndex;
