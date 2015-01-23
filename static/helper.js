@@ -1,6 +1,7 @@
 var workSnippet = function(index) {
     return "<div class=\"added\">\
        <div id=\"workWrapper" +index+ "\">\
+	     <button type=\"button\" class=\"close\" aria-label=\"Close\"><span aria-hidden=\"true\">&times;</span></button>\
          <div class=\"form-group\">\
            <label for=\"nameOfWork" +index+ "\">Name of Work</label>\
 	       <input type=\"text\" class=\"form-control\" id=\"nameOfWork" +index+ "\" placeholder=\"Name of Work\">\
@@ -19,6 +20,7 @@ var modelSnippet = function(workIndex, modelIndex) {
 	console.log(index);
 	return "<div class=\"added\">\
 	   <div class=\"wrapper form-inline\">\
+	   	 <p class=\"text-warning\">If no model is in the photo, please leave 'Model Name' cell blank.</p>\
 	     <div class=\"form-group\">\
 	       <label for=\"nameOfPhoto" +index+ "\">Name of Photo</label>\
 	       <input type=\"text\" class=\"form-control\" id=\"nameOfPhoto" +index+ "\" placeholder=\"Name of Photo\">\
@@ -27,6 +29,7 @@ var modelSnippet = function(workIndex, modelIndex) {
 	       <label for=\"nameOfModel" +index+ "\">Name of Model</label>\
 	       <input type=\"text\" class=\"form-control\" id=\"nameOfModel" +index+ "\" placeholder=\"Name of Model\">\
 	     </div>\
+	     <button type=\"button\" class=\"close\" aria-label=\"Close\"><span aria-hidden=\"true\">&times;</span></button>\
 	   </div>\
 	 </div>"
 }
