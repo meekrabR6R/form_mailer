@@ -1,5 +1,8 @@
 .main-body {
-	padding-right : 15%;
+	padding-right  : 15%;
+	padding-left   : 2%;
+	padding-top    : 2%;
+	padding-bottom : 8%;
 }
 
 .added {
