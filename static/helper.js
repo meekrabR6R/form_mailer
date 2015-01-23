@@ -1,3 +1,53 @@
-$("#add-work-btn").click(function() {
-	$("#release").after("<p>holder</p>");
-});
+var workSnippet = function(index) {
+    return "<div class=\"added\">\
+       <div id=\"workWrapper" +index+ "\">\
+         <div class=\"form-group\">\
+           <label for=\"nameOfWork" +index+ "\">Name of Work</label>\
+	       <input type=\"text\" class=\"form-control\" id=\"nameOfWork" +index+ "\" placeholder=\"Name of Work\">\
+         </div>\
+         <div class=\"form-group\">\
+           <label for=\"descOfWork\">Description of Work</label>\
+	       <input type=\"text\" class=\"form-control\" id=\"nameOfWork" +index+ "\" placeholder=\"Description of Work\">\
+         </div>\
+         <button id=\"add-model-btn" +index+ "\" type=\"Button\" class=\"btn btn-default\">+ Add Model</button>\
+       </div>\
+     </div>"
+}
+
+var modelSnippet = function(workIndex, modelIndex) {
+	var index = workIndex.toString()+""+modelIndex.toString();
+	console.log(index);
+	return "<div class=\"added\">\
+	   <div class=\"wrapper form-inline\">\
+	     <div class=\"form-group\">\
+	       <label for=\"nameOfPhoto" +index+ "\">Name of Photo</label>\
+	       <input type=\"text\" class=\"form-control\" id=\"nameOfPhoto" +index+ "\" placeholder=\"Name of Photo\">\
+	     </div>\
+	     <div class=\"form-group\">\
+	       <label for=\"nameOfModel" +index+ "\">Name of Model</label>\
+	       <input type=\"text\" class=\"form-control\" id=\"nameOfModel" +index+ "\" placeholder=\"Name of Model\">\
+	     </div>\
+	   </div>\
+	 </div>"
+}
+
+
+function setFormClickListeners() {
+	var workIndex = 0;
+	$("#add-work-btn").click(function() {
+		var modelIndex = 0;
+		var tempWorkIndex = workIndex;
+		console.log(workIndex.toString());
+		$("#release").after(workSnippet(workIndex));
+		
+		$("#add-model-btn" + tempWorkIndex.toString()).click(function() {
+			var tempModelIndex = modelIndex;
+			$("#workWrapper" + tempWorkIndex.toString()).after(modelSnippet(tempWorkIndex, tempModelIndex));
+			modelIndex++;
+		});
+		
+		workIndex++;			
+	});
+}
+
+setFormClickListeners();

@@ -1,0 +1,13 @@
+.main-body {
+	padding-right : 15%;
+}
+
+.added {
+	border-style  : solid; 
+	border-width  : 1px;
+	border-color  : #BDA0CB;
+	border-radius : 4px;
+	padding       : 10px;
+	margin-top    : 10px;
+	margin-bottom : 10px;
+}
