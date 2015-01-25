@@ -121,9 +121,9 @@
   text-decoration: none;
 }
 
-.sigNav .typeIt a.current,
-.sigNav .typeIt a.current:link,
-.sigNav .typeIt a.current:visited {
+.sigNav .drawIt a.current,
+.sigNav .drawIt a.current:link,
+.sigNav .drawIt a.current:visited {
   background-color: #ccc;
 
   color: #555;
@@ -142,7 +142,7 @@
 .sigWrapper {
   clear: both;
   height: 100px;
-
+  padding-right: 35%;
   border: 1px solid #ccc;
 }
 

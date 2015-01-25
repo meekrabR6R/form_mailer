@@ -55,5 +55,5 @@ function setFormClickListeners() {
 
 $(document).ready(function() {
 	setFormClickListeners();
-	$(".sigPad").signaturePad();
+	$(".sigPad").signaturePad({drawOnly : true});
 });
