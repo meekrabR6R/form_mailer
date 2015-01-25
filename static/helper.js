@@ -53,4 +53,7 @@ function setFormClickListeners() {
 	});
 }
 
-setFormClickListeners();
+$(document).ready(function() {
+	setFormClickListeners();
+	$(".sigPad").signaturePad();
+});
