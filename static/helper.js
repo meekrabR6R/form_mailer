@@ -10,15 +10,15 @@ var workSnippet = function(index) {
            <label for=\"descOfWork\">Description of Work</label>\
 	       <input type=\"text\" class=\"form-control\" id=\"nameOfWork" +index+ "\" placeholder=\"Description of Work\">\
          </div>\
-         <button id=\"add-model-btn" +index+ "\" type=\"Button\" class=\"btn btn-default\">+ Add Model</button>\
+         <button id=\"add-photo-btn" +index+ "\" type=\"Button\" class=\"btn btn-default\">+ Add Photo</button>\
        </div>\
      </div>"
 }
 
-var modelSnippet = function(workIndex, modelIndex) {
-	var index = workIndex.toString()+""+modelIndex.toString();
+var photoSnippet = function(workIndex, photoIndex) {
+	var index = workIndex.toString()+""+photoIndex.toString();
 	console.log(index);
-	return "<div id=\"modelWrapper" +index+ "\" class=\"added wrapper form-inline\">\
+	return "<div id=\"photoWrapper" +index+ "\" class=\"added wrapper form-inline\">\
 	   	 <p class=\"text-warning\">If no model is in the photo, please leave 'Model Name' cell blank.</p>\
 	     <div class=\"form-group\">\
 	       <label for=\"nameOfPhoto" +index+ "\">Name of Photo</label>\
@@ -28,7 +28,7 @@ var modelSnippet = function(workIndex, modelIndex) {
 	       <label for=\"nameOfModel" +index+ "\">Name of Model</label>\
 	       <input type=\"text\" class=\"form-control\" id=\"nameOfModel" +index+ "\" placeholder=\"Name of Model\">\
 	     </div>\
-	     <button id=\"removeModel" +index+ "\" type=\"button\" class=\"close\" aria-label=\"Close\"><span aria-hidden=\"true\">&times;</span></button>\
+	     <button id=\"removePhoto" +index+ "\" type=\"button\" class=\"close\" aria-label=\"Close\"><span aria-hidden=\"true\">&times;</span></button>\
 	   </div>"
 }
 
@@ -36,26 +36,22 @@ var modelSnippet = function(workIndex, modelIndex) {
 function setFormClickListeners() {
 	var workIndex = 0;
 	$("#add-work-btn").click(function() {
-		var modelIndex = 0;
+		var photoIndex = 0;
 		var tempWorkIndex = workIndex;
 
 		$("#add-work-btn-wrapper").after(workSnippet(workIndex));
-
 		$("#removeWork" + tempWorkIndex.toString()).click(function() {
 			$("#outterWorkWrapper" + tempWorkIndex.toString()).remove();
 		});
 
-		$("#add-model-btn" + tempWorkIndex.toString()).click(function() {
-			var tempModelIndex = modelIndex;
-			$("#workWrapper" + tempWorkIndex.toString()).after(modelSnippet(tempWorkIndex, tempModelIndex));
-			
-			$("#removeModel" + tempWorkIndex.toString() + "" + tempModelIndex.toString()).click(function() {
-				$("#modelWrapper" + tempWorkIndex.toString() + "" + tempModelIndex.toString()).remove();
+		$("#add-photo-btn" + tempWorkIndex.toString()).click(function() {
+			var tempPhotoIndex = photoIndex;
+			$("#workWrapper" + tempWorkIndex.toString()).after(photoSnippet(tempWorkIndex, tempPhotoIndex));
+			$("#removePhoto" + tempWorkIndex.toString() + "" + tempPhotoIndex.toString()).click(function() {
+				$("#photoWrapper" + tempWorkIndex.toString() + "" + tempPhotoIndex.toString()).remove();
 			});
-
-			modelIndex++;
-		});
-		
+			photoIndex++;
+		});		
 		workIndex++;			
 	});
 }
