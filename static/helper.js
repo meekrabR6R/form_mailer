@@ -4,11 +4,11 @@ var workSnippet = function(index) {
 	     <button id=\"removeWork" +index+ "\" type=\"button\" class=\"close\" aria-label=\"Close\"><span aria-hidden=\"true\">&times;</span></button>\
          <div class=\"form-group\">\
            <label for=\"nameOfWork" +index+ "\">Name of Work</label>\
-	       <input type=\"text\" class=\"form-control\" id=\"nameOfWork" +index+ "\" placeholder=\"Name of Work\">\
+	       <input type=\"text\" class=\"form-control\" data-parsley-required=\"true\" id=\"nameOfWork" +index+ "\" placeholder=\"Name of Work\">\
          </div>\
          <div class=\"form-group\">\
            <label for=\"descOfWork\">Description of Work</label>\
-	       <input type=\"text\" class=\"form-control\" id=\"nameOfWork" +index+ "\" placeholder=\"Description of Work\">\
+	       <input type=\"text\" class=\"form-control\" data-parsley-required=\"true\" id=\"nameOfWork" +index+ "\" placeholder=\"Description of Work\">\
          </div>\
          <button id=\"add-photo-btn" +index+ "\" type=\"Button\" class=\"btn btn-default\">+ Add Photo</button>\
        </div>\
@@ -22,7 +22,7 @@ var photoSnippet = function(workIndex, photoIndex) {
 	   	 <p class=\"text-warning\">If no model is in the photo, please leave 'Model Name' cell blank.</p>\
 	     <div class=\"form-group\">\
 	       <label for=\"nameOfPhoto" +index+ "\">Name of Photo</label>\
-	       <input type=\"text\" class=\"form-control\" id=\"nameOfPhoto" +index+ "\" placeholder=\"Name of Photo\">\
+	       <input type=\"text\" class=\"form-control\" data-parsley-required=\"true\" id=\"nameOfPhoto" +index+ "\" placeholder=\"Name of Photo\">\
 	     </div>\
 	     <div class=\"form-group\">\
 	       <label for=\"nameOfModel" +index+ "\">Name of Model</label>\
