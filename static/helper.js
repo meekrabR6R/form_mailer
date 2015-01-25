@@ -28,6 +28,10 @@ var photoSnippet = function(workIndex, photoIndex) {
 	       <label for=\"nameOfModel" +index+ "\">Name of Model</label>\
 	       <input type=\"text\" class=\"form-control\" id=\"nameOfModel" +index+ "\" placeholder=\"Name of Model\">\
 	     </div>\
+	     <div class=\"form-group\">\
+	       <label for=\"emailOfModel" +index+ "\">Email Address of Model</label>\
+	       <input type=\"text\" class=\"form-control\" id=\"emailOfModel" +index+ "\" placeholder=\"Email Address of Model\">\
+	     </div>\
 	     <button id=\"removePhoto" +index+ "\" type=\"button\" class=\"close\" aria-label=\"Close\"><span aria-hidden=\"true\">&times;</span></button>\
 	   </div>"
 }
