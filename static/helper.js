@@ -1,7 +1,7 @@
 var workSnippet = function(index) {
-    return "<div class=\"added\">\
-       <div id=\"workWrapper" +index+ "\">\
-	     <button type=\"button\" class=\"close\" aria-label=\"Close\"><span aria-hidden=\"true\">&times;</span></button>\
+    return "<div id=\"outterWorkWrapper" +index+ "\"  class=\"added\">\
+        <div id=\"workWrapper" +index+ "\">\
+	     <button id=\"removeWork" +index+ "\" type=\"button\" class=\"close\" aria-label=\"Close\"><span aria-hidden=\"true\">&times;</span></button>\
          <div class=\"form-group\">\
            <label for=\"nameOfWork" +index+ "\">Name of Work</label>\
 	       <input type=\"text\" class=\"form-control\" id=\"nameOfWork" +index+ "\" placeholder=\"Name of Work\">\
@@ -18,8 +18,7 @@ var workSnippet = function(index) {
 var modelSnippet = function(workIndex, modelIndex) {
 	var index = workIndex.toString()+""+modelIndex.toString();
 	console.log(index);
-	return "<div class=\"added\">\
-	   <div class=\"wrapper form-inline\">\
+	return "<div id=\"modelWrapper" +index+ "\" class=\"added wrapper form-inline\">\
 	   	 <p class=\"text-warning\">If no model is in the photo, please leave 'Model Name' cell blank.</p>\
 	     <div class=\"form-group\">\
 	       <label for=\"nameOfPhoto" +index+ "\">Name of Photo</label>\
@@ -29,9 +28,8 @@ var modelSnippet = function(workIndex, modelIndex) {
 	       <label for=\"nameOfModel" +index+ "\">Name of Model</label>\
 	       <input type=\"text\" class=\"form-control\" id=\"nameOfModel" +index+ "\" placeholder=\"Name of Model\">\
 	     </div>\
-	     <button type=\"button\" class=\"close\" aria-label=\"Close\"><span aria-hidden=\"true\">&times;</span></button>\
-	   </div>\
-	 </div>"
+	     <button id=\"removeModel" +index+ "\" type=\"button\" class=\"close\" aria-label=\"Close\"><span aria-hidden=\"true\">&times;</span></button>\
+	   </div>"
 }
 
 
@@ -40,12 +38,21 @@ function setFormClickListeners() {
 	$("#add-work-btn").click(function() {
 		var modelIndex = 0;
 		var tempWorkIndex = workIndex;
-		console.log(workIndex.toString());
+
 		$("#add-work-btn-wrapper").after(workSnippet(workIndex));
-		
+
+		$("#removeWork" + tempWorkIndex.toString()).click(function() {
+			$("#outterWorkWrapper" + tempWorkIndex.toString()).remove();
+		});
+
 		$("#add-model-btn" + tempWorkIndex.toString()).click(function() {
 			var tempModelIndex = modelIndex;
 			$("#workWrapper" + tempWorkIndex.toString()).after(modelSnippet(tempWorkIndex, tempModelIndex));
+			
+			$("#removeModel" + tempWorkIndex.toString() + "" + tempModelIndex.toString()).click(function() {
+				$("#modelWrapper" + tempWorkIndex.toString() + "" + tempModelIndex.toString()).remove();
+			});
+
 			modelIndex++;
 		});
 		
