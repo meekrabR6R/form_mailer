@@ -8,7 +8,7 @@ var workSnippet = function(index) {
          </div>\
          <div class=\"form-group\">\
            <label for=\"descOfWork\">Description of Work</label>\
-	       <input type=\"text\" class=\"form-control\" data-parsley-required=\"true\" id=\"nameOfWork" +index+ "\" placeholder=\"Description of Work\">\
+	       <input type=\"text\" class=\"form-control\" data-parsley-required=\"true\" name=\"descOfWork" +index+" \" id=\"descOfWork" +index+ "\" placeholder=\"Description of Work\">\
          </div>\
          <button id=\"add-photo-btn" +index+ "\" type=\"Button\" class=\"btn btn-default\">+ Add Photo</button>\
        </div>\
@@ -22,15 +22,15 @@ var photoSnippet = function(workIndex, photoIndex) {
 	   	 <p class=\"text-warning\">If no model is in the photo, please leave 'Model Name' cell blank.</p>\
 	     <div class=\"form-group\">\
 	       <label for=\"nameOfPhoto" +index+ "\">Name of Photo</label>\
-	       <input type=\"text\" class=\"form-control\" data-parsley-required=\"true\" id=\"nameOfPhoto" +index+ "\" placeholder=\"Name of Photo\">\
+	       <input type=\"text\" class=\"form-control\" data-parsley-required=\"true\" name=\"nameOfPhoto" +index+ "\"id=\"nameOfPhoto" +index+ "\" placeholder=\"Name of Photo\">\
 	     </div>\
 	     <div class=\"form-group\">\
 	       <label for=\"nameOfModel" +index+ "\">Name of Model</label>\
-	       <input type=\"text\" class=\"form-control\" id=\"nameOfModel" +index+ "\" placeholder=\"Name of Model\">\
+	       <input type=\"text\" class=\"form-control\" name=\"nameOfModel" +index+ "\" id=\"nameOfModel" +index+ "\" placeholder=\"Name of Model\">\
 	     </div>\
 	     <div class=\"form-group\">\
 	       <label for=\"emailOfModel" +index+ "\">Model Email</label>\
-	       <input type=\"text\" class=\"form-control\" id=\"emailOfModel" +index+ "\" placeholder=\"Model Email\">\
+	       <input type=\"text\" class=\"form-control\" name=\"emailOfModel" +index+ " id=\"emailOfModel" +index+ "\" placeholder=\"Model Email\">\
 	     </div>\
 	     <button id=\"removePhoto" +index+ "\" type=\"button\" class=\"close\" aria-label=\"Close\"><span aria-hidden=\"true\">&times;</span></button>\
 	   </div>"
