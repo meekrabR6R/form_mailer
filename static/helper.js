@@ -12,30 +12,37 @@ var workSnippet = function(index) {
          </div>\
          <button id=\"add-photo-btn" +index+ "\" type=\"Button\" class=\"btn btn-default\">+ Add Photo</button>\
        </div>\
-     </div>"
+     </div>";
 }
 
 var photoSnippet = function(workIndex, photoIndex) {
 	var index = workIndex.toString()+""+photoIndex.toString();
-	console.log(index);
-	return "<div id=\"photoWrapper" +index+ "\" class=\"added wrapper form-inline\">\
+	return "<div id=\"outterPhotoWrapper" +index+ "\" class=\"added\">\
+	   <div id=\"photoWrapper" +index+ "\" class=\"wrapper form-inline\">\
 	   	 <p class=\"text-warning\">If no model is in the photo, please leave 'Model Name' cell blank.</p>\
 	     <div class=\"form-group\">\
 	       <label for=\"nameOfPhoto" +index+ "\">Name of Photo</label>\
 	       <input type=\"text\" class=\"form-control\" data-parsley-required=\"true\" name=\"nameOfPhoto" +index+ "\"id=\"nameOfPhoto" +index+ "\" placeholder=\"Name of Photo\">\
 	     </div>\
-	     <div class=\"form-group\">\
-	       <label for=\"nameOfModel" +index+ "\">Name of Model</label>\
-	       <input type=\"text\" class=\"form-control\" name=\"nameOfModel" +index+ "\" id=\"nameOfModel" +index+ "\" placeholder=\"Name of Model\">\
-	     </div>\
-	     <div class=\"form-group\">\
-	       <label for=\"emailOfModel" +index+ "\">Model Email</label>\
-	       <input type=\"text\" class=\"form-control\" name=\"emailOfModel" +index+ " id=\"emailOfModel" +index+ "\" placeholder=\"Model Email\">\
-	     </div>\
+         <button id=\"add-model-btn" +index+ "\" type=\"Button\" class=\"btn btn-default\">+ Add Model</button>\
 	     <button id=\"removePhoto" +index+ "\" type=\"button\" class=\"close\" aria-label=\"Close\"><span aria-hidden=\"true\">&times;</span></button>\
-	   </div>"
+	   </div>";
 }
 
+var modelSnippet = function(workIndex, photoIndex, modelIndex) {
+	var index = workIndex.toString()+""+photoIndex.toString()+""+modelIndex.toString();
+	return "<div id=\"modelWrapper" +index+ "\" class=\"added wrapper form-inline\">\
+	          <div class=\"form-group\">\
+	            <label for=\"nameOfModel" +index+ "\">Name of Model</label>\
+	            <input type=\"text\" class=\"form-control\" name=\"nameOfModel" +index+ "\" id=\"nameOfModel" +index+ "\" placeholder=\"Name of Model\">\
+	          </div>\
+	          <div class=\"form-group\">\
+	            <label for=\"emailOfModel" +index+ "\">Model Email</label>\
+	            <input type=\"text\" class=\"form-control\" name=\"emailOfModel" +index+ " id=\"emailOfModel" +index+ "\" placeholder=\"Model Email\">\
+	          </div>\
+	          <button id=\"removeModel" +index+ "\" type=\"button\" class=\"close\" aria-label=\"Close\"><span aria-hidden=\"true\">&times;</span></button>\
+	        </div>";	
+}
 
 function setFormClickListeners() {
 	var workIndex = 0;
@@ -49,11 +56,36 @@ function setFormClickListeners() {
 		});
 
 		$("#add-photo-btn" + tempWorkIndex.toString()).click(function() {
+			var modelIndex = 0;
 			var tempPhotoIndex = photoIndex;
-			$("#workWrapper" + tempWorkIndex.toString()).after(photoSnippet(tempWorkIndex, tempPhotoIndex));
-			$("#removePhoto" + tempWorkIndex.toString() + "" + tempPhotoIndex.toString()).click(function() {
-				$("#photoWrapper" + tempWorkIndex.toString() + "" + tempPhotoIndex.toString()).remove();
+
+			$("#workWrapper" + tempWorkIndex.toString())
+			                   .after(photoSnippet(tempWorkIndex, 
+			                   	                   tempPhotoIndex));
+			$("#removePhoto" + tempWorkIndex.toString() + "" +
+			                   tempPhotoIndex.toString()).click(function() {
+				$("#outterPhotoWrapper" + tempWorkIndex.toString() + "" +
+				                          tempPhotoIndex.toString()).remove();
 			});
+
+			$("#add-model-btn" + tempWorkIndex.toString() + "" +
+			                     tempPhotoIndex.toString()).click(function() {
+				var tempModelIndex = modelIndex;
+				$("#photoWrapper" + tempWorkIndex.toString() + "" +
+				                    tempPhotoIndex.toString())
+				                        .after(modelSnippet(tempWorkIndex, 
+				                    	                    tempPhotoIndex, 
+				                    	                    tempModelIndex))
+				$("#removeModel" + tempWorkIndex.toString() + "" +
+				                   tempPhotoIndex.toString() + "" +
+				                   tempModelIndex.toString()).click(function() {
+					$("#modelWrapper" + tempWorkIndex.toString() + "" +
+					                    tempPhotoIndex.toString() + "" + 
+					                    tempModelIndex.toString()).remove();
+				});
+				modelIndex++;
+			});
+
 			photoIndex++;
 		});		
 		workIndex++;			
