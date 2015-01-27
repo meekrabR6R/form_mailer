@@ -4,11 +4,11 @@ var workSnippet = function(index) {
 	     <button id=\"removeWork" +index+ "\" type=\"button\" class=\"close\" aria-label=\"Close\"><span aria-hidden=\"true\">&times;</span></button>\
          <div class=\"form-group\">\
            <label for=\"nameOfWork" +index+ "\">Name of Work</label>\
-	       <input type=\"text\" class=\"form-control\" data-parsley-required=\"true\" id=\"nameOfWork" +index+ "\" placeholder=\"Name of Work\">\
+	       <input type=\"text\" class=\"form-control\" data-parsley-required=\"true\" name=\"nameOfWork" +index+"\" id=\"nameOfWork" +index+ "\" placeholder=\"Name of Work\">\
          </div>\
          <div class=\"form-group\">\
            <label for=\"descOfWork\">Description of Work</label>\
-	       <input type=\"text\" class=\"form-control\" data-parsley-required=\"true\" name=\"descOfWork" +index+" \" id=\"descOfWork" +index+ "\" placeholder=\"Description of Work\">\
+	       <input type=\"text\" class=\"form-control\" data-parsley-required=\"true\" name=\"descOfWork" +index+"\" id=\"descOfWork" +index+ "\" placeholder=\"Description of Work\">\
          </div>\
          <button id=\"add-photo-btn" +index+ "\" type=\"Button\" class=\"btn btn-default\">+ Add Photo</button>\
        </div>\

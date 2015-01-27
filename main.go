@@ -6,6 +6,8 @@ import (
 	"github.com/gorilla/mux"
 	"net/http"
 	"os"
+	"strconv"
+	"strings"
 )
 
 type Artist struct {
@@ -13,15 +15,18 @@ type Artist struct {
 	LastName  string
 	Email     string
 	Link      string
+	Works     []Work
 }
 
 type Work struct {
 	Name        string
 	Description string
+	Photos      []Photo
 }
 
 type Photo struct {
-	Name string
+	Name   string
+	Models []Model
 }
 
 type Model struct {
@@ -36,6 +41,7 @@ func FormHandler(w http.ResponseWriter, req *http.Request) {
 		fmt.Println(err)
 	}
 	form := req.PostForm
+
 	artist := Artist{
 		FirstName: form["firstName"][0],
 		LastName:  form["lastName"][0],
@@ -43,7 +49,52 @@ func FormHandler(w http.ResponseWriter, req *http.Request) {
 		Link:      form["downloadLink"][0],
 	}
 
+	fmt.Println(extractWorks(form))
 	fmt.Println(artist.FirstName)
+}
+
+func getItemCount(filter string, form map[string][]string) int {
+	count := 0
+	for k, _ := range form {
+		if strings.Contains(k, filter) {
+			count++
+		}
+	}
+	return count
+}
+
+func getIndices(filter string, form map[string][]string) []int {
+	numItems := getItemCount(filter, form)
+	indices := make([]int, numItems)
+	i := 0
+	for k, _ := range form {
+		if strings.Contains(k, filter) {
+			j, err := strconv.Atoi(k[len(k)-1:])
+			if err != nil {
+				panic(err)
+			}
+
+			indices[i] = j
+			i++
+		}
+	}
+	fmt.Println(indices)
+	return indices
+}
+
+func extractWorks(form map[string][]string) []Work {
+	numItems := getItemCount("descOfWork", form)
+	workIndices := getIndices("descOfWork", form)
+	works := make([]Work, numItems)
+	j := 0
+	for i := range workIndices {
+		works[j] = Work{
+			Name:        form[fmt.Sprintf("nameOfWork%d", i)][0],
+			Description: form[fmt.Sprintf("descOfWork%d", i)][0],
+		}
+		j++
+	}
+	return works
 }
 
 func main() {
