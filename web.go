@@ -63,6 +63,10 @@ func getItemCount(filter string, form map[string][]string) int {
 	return count
 }
 
+/**
+ * Returns an array of indices for works. This is needed b/c
+ * it is possible for user to remove works.
+ */
 func getIndices(filter string, form map[string][]string) []int {
 	numItems := getItemCount(filter, form)
 	indices := make([]int, numItems)
@@ -78,7 +82,6 @@ func getIndices(filter string, form map[string][]string) []int {
 			i++
 		}
 	}
-	fmt.Println(indices)
 	return indices
 }
 
@@ -86,13 +89,12 @@ func extractWorks(form map[string][]string) []Work {
 	numItems := getItemCount("descOfWork", form)
 	workIndices := getIndices("descOfWork", form)
 	works := make([]Work, numItems)
-	j := 0
-	for i := range workIndices {
-		works[j] = Work{
-			Name:        form[fmt.Sprintf("nameOfWork%d", i)][0],
-			Description: form[fmt.Sprintf("descOfWork%d", i)][0],
+
+	for i, e := range workIndices {
+		works[i] = Work{
+			Name:        form[fmt.Sprintf("nameOfWork%d", e)][0],
+			Description: form[fmt.Sprintf("descOfWork%d", e)][0],
 		}
-		j++
 	}
 	return works
 }
