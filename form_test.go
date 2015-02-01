@@ -78,4 +78,10 @@ func TestExtractWorks(t *testing.T) {
 			"expected", 3,
 			"got", len(works))
 	}
+
+	if works[0].Name != "Pic of Blob" {
+		t.Error("For", item1,
+			"expected", "Pic of Blob",
+			"got", works[0].Name)
+	}
 }
