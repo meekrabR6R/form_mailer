@@ -6,12 +6,19 @@ import (
 	"strings"
 )
 
+// maybe make a "form" interface for
+// these?
+
 type Artist struct {
 	FirstName string
 	LastName  string
 	Email     string
 	Link      string
 	Works     []Work
+}
+
+func (a *Artist) FullName() string {
+	return fmt.Sprintf("%s %s", a.FirstName, a.LastName)
 }
 
 type Work struct {

@@ -14,10 +14,11 @@ import (
  * Global config
  */
 type Config struct {
-	Title string
+	ArtistTitle string
+	ArtistBody  string
+	ModelTitle  string
+	ModelBody   string
 }
-
-var config = getConf()
 
 func FormHandler(w http.ResponseWriter, req *http.Request) {
 	err := req.ParseForm()
@@ -33,17 +34,21 @@ func FormHandler(w http.ResponseWriter, req *http.Request) {
 		Email:     form["emailAddress"][0],
 		Link:      form["downloadLink"][0],
 	}
-	fmt.Println(config.Title)
 	makeAPDF(artist)
-	fmt.Println(extractWorks(form))
-	fmt.Println(artist.FirstName)
 }
 
 func makeAPDF(artist Artist) {
+	var config = getConf()
+	fmt.Println(config.ArtistTitle)
+	pdfBody := fmt.Sprintf("%s\n%s", config.ArtistTitle, config.ArtistBody)
+	fmt.Println(pdfBody)
+	//config.ArtistTitle,
+	//fmt.Sprintf(config.ArtistBody, artist.FullName()))
+
 	pdf := gofpdf.New("P", "mm", "A4", "../font")
 	pdf.AddPage()
-	pdf.SetFont("Arial", "B", 16)
-	pdf.Cell(40, 10, config.Title)
+	pdf.SetFont("Arial", "B", 10)
+	pdf.MultiCell(150, 5, pdfBody, "", "", false)
 	err := pdf.OutputFileAndClose("temp1.pdf")
 
 	if err != nil {
