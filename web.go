@@ -6,7 +6,10 @@ import (
 	"flag"
 	"fmt"
 	"github.com/gorilla/mux"
+	"github.com/jordan-wright/email"
 	"net/http"
+	"net/smtp"
+	"net/textproto"
 	"os"
 )
 
@@ -54,6 +57,22 @@ func makeAPDF(artist Artist) {
 	if err != nil {
 		panic(err)
 	}
+}
+
+func sendEmail(artist Artist) error {
+
+	e := &email.Email{
+		To:   []string{artist.Email},
+		From: "Perjus <noreply@gmail.com>",
+		Subject: fmt.Sprintf("Artist Release Form for %s",
+			artist.FullName()),
+		Text:    []byte("Text Body is, of course, supported!"),
+		HTML:    []byte("<h1>Fancy HTML is supported, too!</h1>"),
+		Headers: textproto.MIMEHeader{},
+	}
+
+	return e.Send("smtp.gmail.com:587",
+		smtp.PlainAuth("", "test@gmail.com", "password123", "smtp.gmail.com"))
 }
 
 func getConf() (conf *Config) {
