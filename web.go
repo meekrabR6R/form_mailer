@@ -55,15 +55,17 @@ func makeAPDF(artist Artist) {
 	var config = getConf()
 	body := fmt.Sprintf(config.ArtistBody, strings.ToUpper(artist.FullName()),
 		strings.ToUpper(artist.FullName()))
-	pdfBody := fmt.Sprintf("%s\n%s", config.ArtistTitle, body)
+	pdfBody := fmt.Sprintf("%s\n\n%s", config.ArtistTitle, body)
 	//config.ArtistTitle,
 	//fmt.Sprintf(config.ArtistBody, artist.FullName()))
 
 	pdf := gofpdf.New("P", "mm", "A4", "../font")
 	pdf.AddPage()
-	pdf.SetFont("Arial", "B", 10)
+	pdf.SetFont("Times", "B", 10)
 	pdf.MultiCell(150, 5, pdfBody, "", "", false)
-	err := pdf.OutputFileAndClose("temp1.pdf")
+
+	err := pdf.OutputFileAndClose(
+		fmt.Sprintf("%s_release.pdf", artist.LastName))
 
 	if err != nil {
 		panic(err)
