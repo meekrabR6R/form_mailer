@@ -14,6 +14,7 @@ type Artist struct {
 	LastName  string
 	Email     string
 	Link      string
+	EmailSent bool
 	Works     []Work
 }
 

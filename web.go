@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"github.com/gorilla/mux"
 	"github.com/jordan-wright/email"
+	"gopkg.in/mgo.v2"
 	"net/http"
 	"net/smtp"
 	"net/textproto"
@@ -18,6 +19,8 @@ import (
  * Global config
  */
 type Config struct {
+	MongoUrl    string
+	DbName      string
 	SenderEmail string
 	SenderPass  string
 	ArtistEmail string
@@ -28,10 +31,11 @@ type Config struct {
 }
 
 func FormHandler(w http.ResponseWriter, req *http.Request) {
-	err := req.ParseForm()
+	var config = getConf()
+	err0 := req.ParseForm()
 
-	if err != nil {
-		fmt.Println(err)
+	if err0 != nil {
+		panic(err0)
 	}
 	form := req.PostForm
 
@@ -41,15 +45,28 @@ func FormHandler(w http.ResponseWriter, req *http.Request) {
 		Email:     form["emailAddress"][0],
 		Link:      form["downloadLink"][0],
 	}
+
+	session, err1 := mgo.Dial(config.MongoUrl)
+
+	if err1 != nil {
+		panic(err1)
+	}
+
 	//experimenting with returning the error
 	//or just handling it internally in the
-	//
+	//function.
 	makeAPDF(artist)
 	err2 := sendEmail(artist)
 
+	sent := true
 	if err2 != nil {
 		panic(err2)
+		sent = false
 	}
+
+	artist.EmailSent = sent
+	artistsCollection := session.DB(config.DbName).C("artists")
+	artistsCollection.Insert(artist)
 }
 
 func makeAPDF(artist Artist) {
