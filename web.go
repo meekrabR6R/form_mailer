@@ -41,10 +41,12 @@ func FormHandler(w http.ResponseWriter, req *http.Request) {
 	form := req.PostForm
 
 	artistForm := &ArtistForm{
-		FirstName: form["firstName"][0],
-		LastName:  form["lastName"][0],
-		Email:     form["emailAddress"][0],
-		Link:      form["downloadLink"][0],
+		Form: Form{
+			FirstName: form["firstName"][0],
+			LastName:  form["lastName"][0],
+			Email:     form["emailAddress"][0],
+			Link:      form["downloadLink"][0],
+		},
 	}
 	err1 := artistForm.SetSignature(form["output"][0])
 	if err1 != nil {
@@ -74,12 +76,23 @@ func FormHandler(w http.ResponseWriter, req *http.Request) {
 	artistFormsCollection.Insert(artistForm)
 }
 
-func makeAPDF(form Form) {
+func makeAPDF(form BaseForm) {
 	var config = getConf()
-	body := fmt.Sprintf(config.ArtistBody, strings.ToUpper(form.FullName()),
+	var title string
+	var content string
+
+	if form.IsArtist() {
+		title = config.ArtistTitle
+		content = config.ArtistBody
+	} else {
+		title = config.ModelTitle
+		content = config.ModelBody
+	}
+
+	body := fmt.Sprintf(content, strings.ToUpper(form.FullName()),
 		strings.ToUpper(form.FullName()))
 
-	pdfBody := fmt.Sprintf("%s\n\n%s", config.ArtistTitle, body)
+	pdfBody := fmt.Sprintf("%s\n\n%s", title, body)
 
 	pdf := gofpdf.New("P", "mm", "A4", "../font")
 	pdf.AddPage()

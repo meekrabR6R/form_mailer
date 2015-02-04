@@ -7,31 +7,49 @@ import (
 	"strings"
 )
 
-type Form interface {
+type BaseForm interface {
 	FullName() string
 	SetSignature(string) error
+	IsArtist() bool
+	IsModel() bool
 }
 
-type ArtistForm struct {
+type Form struct {
 	FirstName string
 	LastName  string
 	Email     string
 	Link      string
 	Sig       []map[string]int
 	EmailSent bool
-	Works     []Work
 }
 
-func (a *ArtistForm) FullName() string {
-	return fmt.Sprintf("%s %s", a.FirstName, a.LastName)
+func (f *Form) FullName() string {
+	return fmt.Sprintf("%s %s", f.FirstName, f.LastName)
 }
 
-func (a *ArtistForm) SetSignature(sigString string) error {
+func (f *Form) SetSignature(sigString string) error {
 	rawSig := []byte(sigString)
 	var sig []map[string]int
 	err := json.Unmarshal(rawSig, &sig)
-	a.Sig = sig
+	f.Sig = sig
 	return err
+}
+
+type ArtistForm struct {
+	Form
+	Works []Work
+}
+
+func (a *ArtistForm) IsArtist() bool {
+	return true
+}
+
+func (a *ArtistForm) IsModel() bool {
+	return false
+}
+
+type Model struct {
+	Form
 }
 
 type Work struct {
@@ -43,11 +61,6 @@ type Work struct {
 type Photo struct {
 	Name   string
 	Models []Model
-}
-
-type Model struct {
-	Name  string
-	Email string
 }
 
 func getItemCount(filter string, form map[string][]string) int {
