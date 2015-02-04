@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"strconv"
 	"strings"
@@ -21,6 +22,14 @@ type Artist struct {
 
 func (a *Artist) FullName() string {
 	return fmt.Sprintf("%s %s", a.FirstName, a.LastName)
+}
+
+func (a *Artist) SetSignature(sigString string) error {
+	rawSig := []byte(sigString)
+	var sig []map[string]int
+	err := json.Unmarshal(rawSig, &sig)
+	a.Sig = sig
+	return err
 }
 
 type Work struct {

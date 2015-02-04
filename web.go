@@ -39,21 +39,16 @@ func FormHandler(w http.ResponseWriter, req *http.Request) {
 	}
 
 	form := req.PostForm
-	rawSig := []byte(form["output"][0])
-	var sig []map[string]int
-
-	err1 := json.Unmarshal(rawSig, &sig)
-
-	if err1 != nil {
-		panic(err1)
-	}
 
 	artist := Artist{
 		FirstName: form["firstName"][0],
 		LastName:  form["lastName"][0],
 		Email:     form["emailAddress"][0],
 		Link:      form["downloadLink"][0],
-		Sig:       sig,
+	}
+	err1 := artist.SetSignature(form["output"][0])
+	if err1 != nil {
+		panic(err1)
 	}
 
 	session, err2 := mgo.Dial(config.MongoUrl)
