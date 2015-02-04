@@ -20,6 +20,7 @@ import (
 type Config struct {
 	SenderEmail string
 	SenderPass  string
+	ArtistEmail string
 	ArtistTitle string
 	ArtistBody  string
 	ModelTitle  string
@@ -55,17 +56,16 @@ func makeAPDF(artist Artist) {
 	var config = getConf()
 	body := fmt.Sprintf(config.ArtistBody, strings.ToUpper(artist.FullName()),
 		strings.ToUpper(artist.FullName()))
+
 	pdfBody := fmt.Sprintf("%s\n\n%s", config.ArtistTitle, body)
-	//config.ArtistTitle,
-	//fmt.Sprintf(config.ArtistBody, artist.FullName()))
 
 	pdf := gofpdf.New("P", "mm", "A4", "../font")
 	pdf.AddPage()
 	pdf.SetFont("Times", "B", 10)
-	pdf.MultiCell(150, 5, pdfBody, "", "", false)
+	pdf.MultiCell(185, 5, pdfBody, "", "", false)
 
 	err := pdf.OutputFileAndClose(
-		fmt.Sprintf("%s_release.pdf", artist.LastName))
+		fmt.Sprintf("%s_release.pdf", strings.ToLower(artist.LastName)))
 
 	if err != nil {
 		panic(err)
@@ -75,15 +75,16 @@ func makeAPDF(artist Artist) {
 func sendEmail(artist Artist) error {
 	var config = getConf()
 	e := &email.Email{
-		To:   []string{artist.Email},
-		From: fmt.Sprintf("Perjus <%s>", config.SenderEmail),
-		Subject: fmt.Sprintf("Artist Release Form for %s",
-			artist.FullName()),
-		Text:    []byte("Text Body is, of course, supported!"),
-		HTML:    []byte("<h1>Fancy HTML is supported, too!</h1>"),
+		To:      []string{artist.Email},
+		From:    fmt.Sprintf("Perjus <%s>", config.SenderEmail),
+		Subject: "PERJUS Magazine release forms",
+		Text:    []byte(config.ArtistEmail),
+		HTML:    []byte(fmt.Sprintf("<h1>%s</h1>", config.ArtistEmail)),
 		Headers: textproto.MIMEHeader{},
 	}
-	e.AttachFile("temp1.pdf") //temporary!!
+
+	e.AttachFile(fmt.Sprintf("%s_release.pdf",
+		strings.ToLower(artist.LastName)))
 
 	return e.Send("smtp.gmail.com:587",
 		smtp.PlainAuth("", config.SenderEmail, config.SenderPass, "smtp.gmail.com"))
