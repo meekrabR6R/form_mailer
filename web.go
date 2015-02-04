@@ -37,30 +37,40 @@ func FormHandler(w http.ResponseWriter, req *http.Request) {
 	if err0 != nil {
 		panic(err0)
 	}
+
 	form := req.PostForm
+	rawSig := []byte(form["output"][0])
+	var sig []map[string]int
+
+	err1 := json.Unmarshal(rawSig, &sig)
+
+	if err1 != nil {
+		panic(err1)
+	}
 
 	artist := Artist{
 		FirstName: form["firstName"][0],
 		LastName:  form["lastName"][0],
 		Email:     form["emailAddress"][0],
 		Link:      form["downloadLink"][0],
+		Sig:       sig,
 	}
 
-	session, err1 := mgo.Dial(config.MongoUrl)
+	session, err2 := mgo.Dial(config.MongoUrl)
 
-	if err1 != nil {
-		panic(err1)
+	if err2 != nil {
+		panic(err2)
 	}
 
 	//experimenting with returning the error
 	//or just handling it internally in the
 	//function.
 	makeAPDF(artist)
-	err2 := sendEmail(artist)
+	err3 := sendEmail(artist)
 
 	sent := true
-	if err2 != nil {
-		panic(err2)
+	if err3 != nil {
+		panic(err3)
 		sent = false
 	}
 
