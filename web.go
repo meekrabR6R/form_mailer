@@ -11,12 +11,15 @@ import (
 	"net/smtp"
 	"net/textproto"
 	"os"
+	"strings"
 )
 
 /**
  * Global config
  */
 type Config struct {
+	SenderEmail string
+	SenderPass  string
 	ArtistTitle string
 	ArtistBody  string
 	ModelTitle  string
@@ -37,14 +40,22 @@ func FormHandler(w http.ResponseWriter, req *http.Request) {
 		Email:     form["emailAddress"][0],
 		Link:      form["downloadLink"][0],
 	}
+	//experimenting with returning the error
+	//or just handling it internally in the
+	//
 	makeAPDF(artist)
+	err2 := sendEmail(artist)
+
+	if err2 != nil {
+		panic(err2)
+	}
 }
 
 func makeAPDF(artist Artist) {
 	var config = getConf()
-	fmt.Println(config.ArtistTitle)
-	pdfBody := fmt.Sprintf("%s\n%s", config.ArtistTitle, config.ArtistBody)
-	fmt.Println(pdfBody)
+	body := fmt.Sprintf(config.ArtistBody, strings.ToUpper(artist.FullName()),
+		strings.ToUpper(artist.FullName()))
+	pdfBody := fmt.Sprintf("%s\n%s", config.ArtistTitle, body)
 	//config.ArtistTitle,
 	//fmt.Sprintf(config.ArtistBody, artist.FullName()))
 
@@ -60,19 +71,20 @@ func makeAPDF(artist Artist) {
 }
 
 func sendEmail(artist Artist) error {
-
+	var config = getConf()
 	e := &email.Email{
 		To:   []string{artist.Email},
-		From: "Perjus <noreply@gmail.com>",
+		From: fmt.Sprintf("Perjus <%s>", config.SenderEmail),
 		Subject: fmt.Sprintf("Artist Release Form for %s",
 			artist.FullName()),
 		Text:    []byte("Text Body is, of course, supported!"),
 		HTML:    []byte("<h1>Fancy HTML is supported, too!</h1>"),
 		Headers: textproto.MIMEHeader{},
 	}
+	e.AttachFile("temp1.pdf") //temporary!!
 
 	return e.Send("smtp.gmail.com:587",
-		smtp.PlainAuth("", "test@gmail.com", "password123", "smtp.gmail.com"))
+		smtp.PlainAuth("", config.SenderEmail, config.SenderPass, "smtp.gmail.com"))
 }
 
 func getConf() (conf *Config) {
