@@ -7,10 +7,12 @@ import (
 	"strings"
 )
 
-// maybe make a "form" interface for
-// these?
+type Form interface {
+	FullName() string
+	SetSignature(string) error
+}
 
-type Artist struct {
+type ArtistForm struct {
 	FirstName string
 	LastName  string
 	Email     string
@@ -20,11 +22,11 @@ type Artist struct {
 	Works     []Work
 }
 
-func (a *Artist) FullName() string {
+func (a *ArtistForm) FullName() string {
 	return fmt.Sprintf("%s %s", a.FirstName, a.LastName)
 }
 
-func (a *Artist) SetSignature(sigString string) error {
+func (a *ArtistForm) SetSignature(sigString string) error {
 	rawSig := []byte(sigString)
 	var sig []map[string]int
 	err := json.Unmarshal(rawSig, &sig)

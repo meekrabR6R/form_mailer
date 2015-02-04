@@ -19,15 +19,15 @@ import (
  * Global config
  */
 type Config struct {
-	MongoUrl    string
-	DbName      string
-	SenderEmail string
-	SenderPass  string
-	ArtistEmail string
-	ArtistTitle string
-	ArtistBody  string
-	ModelTitle  string
-	ModelBody   string
+	MongoUrl        string
+	DbName          string
+	SenderEmail     string
+	SenderPass      string
+	ArtistEmailBody string
+	ArtistTitle     string
+	ArtistBody      string
+	ModelTitle      string
+	ModelBody       string
 }
 
 func FormHandler(w http.ResponseWriter, req *http.Request) {
@@ -40,13 +40,13 @@ func FormHandler(w http.ResponseWriter, req *http.Request) {
 
 	form := req.PostForm
 
-	artist := Artist{
+	artistForm := &ArtistForm{
 		FirstName: form["firstName"][0],
 		LastName:  form["lastName"][0],
 		Email:     form["emailAddress"][0],
 		Link:      form["downloadLink"][0],
 	}
-	err1 := artist.SetSignature(form["output"][0])
+	err1 := artistForm.SetSignature(form["output"][0])
 	if err1 != nil {
 		panic(err1)
 	}
@@ -60,8 +60,8 @@ func FormHandler(w http.ResponseWriter, req *http.Request) {
 	//experimenting with returning the error
 	//or just handling it internally in the
 	//function.
-	makeAPDF(artist)
-	err3 := sendEmail(artist)
+	makeAPDF(artistForm)
+	err3 := sendEmail(artistForm)
 
 	sent := true
 	if err3 != nil {
@@ -69,15 +69,15 @@ func FormHandler(w http.ResponseWriter, req *http.Request) {
 		sent = false
 	}
 
-	artist.EmailSent = sent
-	artistsCollection := session.DB(config.DbName).C("artists")
-	artistsCollection.Insert(artist)
+	artistForm.EmailSent = sent
+	artistFormsCollection := session.DB(config.DbName).C("artistForms")
+	artistFormsCollection.Insert(artistForm)
 }
 
-func makeAPDF(artist Artist) {
+func makeAPDF(form Form) {
 	var config = getConf()
-	body := fmt.Sprintf(config.ArtistBody, strings.ToUpper(artist.FullName()),
-		strings.ToUpper(artist.FullName()))
+	body := fmt.Sprintf(config.ArtistBody, strings.ToUpper(form.FullName()),
+		strings.ToUpper(form.FullName()))
 
 	pdfBody := fmt.Sprintf("%s\n\n%s", config.ArtistTitle, body)
 
@@ -87,26 +87,26 @@ func makeAPDF(artist Artist) {
 	pdf.MultiCell(185, 5, pdfBody, "", "", false)
 
 	err := pdf.OutputFileAndClose(
-		fmt.Sprintf("%s_release.pdf", strings.ToLower(artist.LastName)))
+		fmt.Sprintf("%s_release.pdf", form.FullName()))
 
 	if err != nil {
 		panic(err)
 	}
 }
 
-func sendEmail(artist Artist) error {
+func sendEmail(artistForm *ArtistForm) error {
 	var config = getConf()
 	e := &email.Email{
-		To:      []string{artist.Email},
+		To:      []string{artistForm.Email},
 		From:    fmt.Sprintf("Perjus <%s>", config.SenderEmail),
 		Subject: "PERJUS Magazine release forms",
-		Text:    []byte(config.ArtistEmail),
-		HTML:    []byte(fmt.Sprintf("<h1>%s</h1>", config.ArtistEmail)),
+		Text:    []byte(config.ArtistEmailBody),
+		HTML:    []byte(fmt.Sprintf("<h1>%s</h1>", config.ArtistEmailBody)),
 		Headers: textproto.MIMEHeader{},
 	}
 
 	e.AttachFile(fmt.Sprintf("%s_release.pdf",
-		strings.ToLower(artist.LastName)))
+		strings.ToLower(artistForm.FullName())))
 
 	return e.Send("smtp.gmail.com:587",
 		smtp.PlainAuth("", config.SenderEmail, config.SenderPass, "smtp.gmail.com"))
