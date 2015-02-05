@@ -33,12 +33,16 @@ var modelSnippet = function(workIndex, photoIndex, modelIndex) {
 	var index = workIndex.toString()+""+photoIndex.toString()+""+modelIndex.toString();
 	return "<div id=\"modelWrapper" +index+ "\" class=\"added wrapper form-inline\">\
 	          <div class=\"form-group\">\
-	            <label for=\"nameOfModel" +index+ "\">Name of Model</label>\
-	            <input type=\"text\" class=\"form-control\" name=\"nameOfModel" +index+ "\" id=\"nameOfModel" +index+ "\" placeholder=\"Name of Model\">\
+	            <label for=\"firstNameOfModel" +index+ "\">First Name</label>\
+	            <input type=\"text\" class=\"form-control\" name=\"firstNameOfModel" +index+ "\" id=\"firstNameOfModel" +index+ "\" placeholder=\"First Name\">\
+	          </div>\
+	          <div class=\"form-group\">\
+	            <label for=\"lastNameOfModel" +index+ "\">Last Name</label>\
+	            <input type=\"text\" class=\"form-control\" name=\"lastNameOfModel" +index+ "\" id=\"lastNameOfModel" +index+ "\" placeholder=\"Last Name\">\
 	          </div>\
 	          <div class=\"form-group\">\
 	            <label for=\"emailOfModel" +index+ "\">Model Email</label>\
-	            <input type=\"text\" class=\"form-control\" name=\"emailOfModel" +index+ " id=\"emailOfModel" +index+ "\" placeholder=\"Model Email\">\
+	            <input type=\"email\" class=\"form-control\" name=\"emailOfModel" +index+ "\" id=\"emailOfModel" +index+ "\" placeholder=\"Model Email\">\
 	          </div>\
 	          <button id=\"removeModel" +index+ "\" type=\"button\" class=\"close\" aria-label=\"Close\"><span aria-hidden=\"true\">&times;</span></button>\
 	        </div>";	
