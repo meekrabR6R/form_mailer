@@ -48,6 +48,9 @@ func FormHandler(w http.ResponseWriter, req *http.Request) {
 			Link:      form["downloadLink"][0],
 		},
 	}
+
+	artistForm.SetWorks(form)
+
 	err1 := artistForm.SetSignature(form["output"][0])
 	if err1 != nil {
 		panic(err1)
@@ -111,7 +114,7 @@ func sendEmail(artistForm *ArtistForm) error {
 	var config = getConf()
 	e := &email.Email{
 		To:      []string{artistForm.Email},
-		From:    fmt.Sprintf("Perjus <%s>", config.SenderEmail),
+		From:    fmt.Sprintf("PERJUS <%s>", config.SenderEmail),
 		Subject: "PERJUS Magazine release forms",
 		Text:    []byte(config.ArtistEmailBody),
 		HTML:    []byte(fmt.Sprintf("<h1>%s</h1>", config.ArtistEmailBody)),

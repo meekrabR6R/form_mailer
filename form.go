@@ -48,8 +48,31 @@ func (a *ArtistForm) IsModel() bool {
 	return false
 }
 
-type Model struct {
+func (a *ArtistForm) SetWorks(form map[string][]string) {
+	numItems := getItemCount("descOfWork", form)
+	workIndices := getIndices("descOfWork", form)
+	a.Works = make([]Work, numItems)
+
+	for i, e := range workIndices {
+		a.Works[i] = Work{
+			Name:        form[fmt.Sprintf("nameOfWork%d", e)][0],
+			Description: form[fmt.Sprintf("descOfWork%d", e)][0],
+		}
+
+		a.Works[i].SetPhotos(form, e)
+	}
+}
+
+type ModelForm struct {
 	Form
+}
+
+func (m *ModelForm) IsArtist() bool {
+	return false
+}
+
+func (m *ModelForm) IsModel() bool {
+	return true
 }
 
 type Work struct {
@@ -58,9 +81,22 @@ type Work struct {
 	Photos      []Photo
 }
 
+func (w *Work) SetPhotos(form map[string][]string, workIndex int) {
+	filter := fmt.Sprintf("nameOfPhoto%d", workIndex)
+	numItems := getItemCount(filter, form)
+	photoIndices := getIndices(filter, form)
+	w.Photos = make([]Photo, numItems)
+
+	for i, e := range photoIndices {
+		w.Photos[i] = Photo{
+			Name: form[fmt.Sprintf("nameOfPhoto%d%d", workIndex, e)][0],
+		}
+	}
+}
+
 type Photo struct {
 	Name   string
-	Models []Model
+	Models []ModelForm
 }
 
 func getItemCount(filter string, form map[string][]string) int {
@@ -93,18 +129,4 @@ func getIndices(filter string, form map[string][]string) []int {
 		}
 	}
 	return indices
-}
-
-func extractWorks(form map[string][]string) []Work {
-	numItems := getItemCount("descOfWork", form)
-	workIndices := getIndices("descOfWork", form)
-	works := make([]Work, numItems)
-
-	for i, e := range workIndices {
-		works[i] = Work{
-			Name:        form[fmt.Sprintf("nameOfWork%d", e)][0],
-			Description: form[fmt.Sprintf("descOfWork%d", e)][0],
-		}
-	}
-	return works
 }
