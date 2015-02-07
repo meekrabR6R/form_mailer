@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/gorilla/mux"
 	"gopkg.in/mgo.v2"
+	"html/template"
 	"net/http"
 	"os"
 )
@@ -12,7 +13,6 @@ import (
 func FormHandler(w http.ResponseWriter, req *http.Request) {
 	var config = getConf()
 	err0 := req.ParseForm()
-
 	if err0 != nil {
 		panic(err0)
 	}
@@ -29,7 +29,6 @@ func FormHandler(w http.ResponseWriter, req *http.Request) {
 	}
 
 	artistForm.SetWorks(form)
-
 	err1 := artistForm.SetSignature(form["output"][0])
 	if err1 != nil {
 		panic(err1)
@@ -76,6 +75,13 @@ func FormHandler(w http.ResponseWriter, req *http.Request) {
 	artistForm.EmailSent = sent
 	artistFormsCollection := session.DB(config.DbName).C("artistForms")
 	artistFormsCollection.Insert(artistForm)
+
+	http.Redirect(w, req, "/thanks", 301)
+}
+
+func ThanksHandler(w http.ResponseWriter, req *http.Request) {
+	t, _ := template.ParseFiles("static/release_landing_page.html")
+	t.Execute(w, new(interface{}))
 }
 
 func main() {
@@ -84,6 +90,7 @@ func main() {
 
 	router := mux.NewRouter()
 	router.HandleFunc("/work", FormHandler)
+	router.HandleFunc("/thanks", ThanksHandler)
 	//Must go after all routes..
 	router.PathPrefix("/").Handler(http.FileServer(http.Dir("./static/")))
 	http.Handle("/", router)
