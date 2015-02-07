@@ -4,7 +4,6 @@ import (
 	"flag"
 	"fmt"
 	"github.com/gorilla/mux"
-	"gopkg.in/mgo.v2"
 	"html/template"
 	"net/http"
 	"os"
@@ -35,20 +34,21 @@ func FormHandler(w http.ResponseWriter, req *http.Request) {
 		for i := 0; i < len(artistForm.Works); i++ {
 			for j := 0; j < len(artistForm.Works[i].Photos); j++ {
 				for k := 0; k < len(artistForm.Works[i].Photos[j].Models); k++ {
+					//At least this will mitigate any slowdown due to O(n^3) complexity!
+					go func(iIdx int, jIdx int, kIdx int) {
+						modelErr := sendEmail("PERJUS Magazine model release form",
+							config.ModelEmailBody,
+							false,
+							artistForm.Works[iIdx].Photos[jIdx].Models[kIdx].Form)
 
-					modelErr := sendEmail("PERJUS Magazine model release form",
-						config.ModelEmailBody,
-						false,
-						artistForm.Works[i].Photos[j].Models[k].Form)
+						snt := true
+						if modelErr != nil {
+							panic(modelErr)
+							snt = false
+						}
 
-					snt := true
-					if modelErr != nil {
-						panic(modelErr)
-						snt = false
-					}
-
-					artistForm.Works[i].Photos[j].Models[k].EmailSent = snt
-
+						artistForm.Works[iIdx].Photos[jIdx].Models[kIdx].EmailSent = snt
+					}(i, j, k)
 				}
 			}
 		}
@@ -58,7 +58,7 @@ func FormHandler(w http.ResponseWriter, req *http.Request) {
 			panic(err3)
 			sent = false
 		}
-		writeArtistFormToDb(config.MongoUrl, sent)
+		writeArtistFormToDb(config.MongoUrl, sent, artistForm)
 	}()
 
 	http.Redirect(w, req, "/thanks", 301)

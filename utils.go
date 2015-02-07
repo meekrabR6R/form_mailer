@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/jordan-wright/email"
+	"gopkg.in/mgo.v2"
 	"net/smtp"
 	"net/textproto"
 	"os"
@@ -82,9 +83,9 @@ func makeArtistForm(form map[string][]string) (error, *ArtistForm) {
 	return err, artistForm
 }
 
-func writeArtistFormToDb(url string, sent bool) error {
+func writeArtistFormToDb(url string, sent bool, artistForm *ArtistForm) error {
+	config := getConf()
 	session, err := mgo.Dial(config.MongoUrl)
-
 	artistForm.EmailSent = sent
 	artistFormsCollection := session.DB(config.DbName).C("artistForms")
 	artistFormsCollection.Insert(artistForm)
