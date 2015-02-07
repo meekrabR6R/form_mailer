@@ -19,24 +19,9 @@ func FormHandler(w http.ResponseWriter, req *http.Request) {
 
 	form := req.PostForm
 
-	artistForm := &ArtistForm{
-		Form: Form{
-			FirstName: form["firstName"][0],
-			LastName:  form["lastName"][0],
-			Email:     form["emailAddress"][0],
-			Link:      form["downloadLink"][0],
-		},
-	}
-
-	artistForm.SetWorks(form)
-	err1 := artistForm.SetSignature(form["output"][0])
+	err1, artistForm := makeArtistForm(form)
 	if err1 != nil {
 		panic(err1)
-	}
-
-	session, err2 := mgo.Dial(config.MongoUrl)
-	if err2 != nil {
-		panic(err2)
 	}
 
 	makeAPDF(artistForm)
@@ -70,6 +55,11 @@ func FormHandler(w http.ResponseWriter, req *http.Request) {
 	if err3 != nil {
 		panic(err3)
 		sent = false
+	}
+
+	session, err2 := mgo.Dial(config.MongoUrl)
+	if err2 != nil {
+		panic(err2)
 	}
 
 	artistForm.EmailSent = sent

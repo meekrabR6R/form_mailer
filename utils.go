@@ -66,6 +66,22 @@ func makeAPDF(form BaseForm) {
 	}
 }
 
+func makeArtistForm(form map[string][]string) (error, *ArtistForm) {
+	artistForm := &ArtistForm{
+		Form: Form{
+			FirstName: form["firstName"][0],
+			LastName:  form["lastName"][0],
+			Email:     form["emailAddress"][0],
+			Link:      form["downloadLink"][0],
+		},
+	}
+
+	artistForm.SetWorks(form)
+	err := artistForm.SetSignature(form["output"][0])
+
+	return err, artistForm
+}
+
 func sendEmail(sub string, bod string, attachPdf bool, form Form) error {
 	var config = getConf()
 	e := &email.Email{
