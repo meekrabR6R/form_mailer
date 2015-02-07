@@ -24,47 +24,42 @@ func FormHandler(w http.ResponseWriter, req *http.Request) {
 		panic(err1)
 	}
 
-	makeAPDF(artistForm)
+	go func() {
+		makeAPDF(artistForm)
+		err3 := sendEmail("PERJUS Magazine release form",
+			config.ArtistEmailBody,
+			true,
+			artistForm.Form)
 
-	err3 := sendEmail("PERJUS Magazine release form",
-		config.ArtistEmailBody,
-		true,
-		artistForm.Form)
+		//THERE MUST BE A BETTER WAY!!!!!!
+		for i := 0; i < len(artistForm.Works); i++ {
+			for j := 0; j < len(artistForm.Works[i].Photos); j++ {
+				for k := 0; k < len(artistForm.Works[i].Photos[j].Models); k++ {
 
-	//THERE MUST BE A BETTER WAY!!!!!!
-	for i := 0; i < len(artistForm.Works); i++ {
-		for j := 0; j < len(artistForm.Works[i].Photos); j++ {
-			for k := 0; k < len(artistForm.Works[i].Photos[j].Models); k++ {
-				modelErr := sendEmail("PERJUS Magazine model release form",
-					config.ModelEmailBody,
-					false,
-					artistForm.Works[i].Photos[j].Models[k].Form)
+					modelErr := sendEmail("PERJUS Magazine model release form",
+						config.ModelEmailBody,
+						false,
+						artistForm.Works[i].Photos[j].Models[k].Form)
 
-				snt := true
-				if modelErr != nil {
-					panic(modelErr)
-					snt = false
+					snt := true
+					if modelErr != nil {
+						panic(modelErr)
+						snt = false
+					}
+
+					artistForm.Works[i].Photos[j].Models[k].EmailSent = snt
+
 				}
-
-				artistForm.Works[i].Photos[j].Models[k].EmailSent = snt
 			}
 		}
-	}
 
-	sent := true
-	if err3 != nil {
-		panic(err3)
-		sent = false
-	}
-
-	session, err2 := mgo.Dial(config.MongoUrl)
-	if err2 != nil {
-		panic(err2)
-	}
-
-	artistForm.EmailSent = sent
-	artistFormsCollection := session.DB(config.DbName).C("artistForms")
-	artistFormsCollection.Insert(artistForm)
+		sent := true
+		if err3 != nil {
+			panic(err3)
+			sent = false
+		}
+		writeArtistFormToDb(config.MongoUrl, sent)
+	}()
 
 	http.Redirect(w, req, "/thanks", 301)
 }

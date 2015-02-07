@@ -82,6 +82,16 @@ func makeArtistForm(form map[string][]string) (error, *ArtistForm) {
 	return err, artistForm
 }
 
+func writeArtistFormToDb(url string, sent bool) error {
+	session, err := mgo.Dial(config.MongoUrl)
+
+	artistForm.EmailSent = sent
+	artistFormsCollection := session.DB(config.DbName).C("artistForms")
+	artistFormsCollection.Insert(artistForm)
+
+	return err
+}
+
 func sendEmail(sub string, bod string, attachPdf bool, form Form) error {
 	var config = getConf()
 	e := &email.Email{
