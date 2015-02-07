@@ -101,7 +101,8 @@ type Photo struct {
 	Models []ModelForm
 }
 
-func (p *Photo) SetModels(form map[string][]string, workIndex int, photoIndex int) {
+func (p *Photo) SetModels(form map[string][]string, workIndex int,
+	photoIndex int) {
 
 	filter := fmt.Sprintf("firstNameOfModel%d%d", workIndex, photoIndex)
 	numItems := getItemCount(filter, form)
@@ -111,9 +112,12 @@ func (p *Photo) SetModels(form map[string][]string, workIndex int, photoIndex in
 	for i, e := range modelIndices {
 		p.Models[i] = ModelForm{
 			Form: Form{
-				FirstName: form[fmt.Sprintf("firstNameOfModel%d%d%d", workIndex, photoIndex, e)][0],
-				LastName:  form[fmt.Sprintf("lastNameOfModel%d%d%d", workIndex, photoIndex, e)][0],
-				Email:     form[fmt.Sprintf("emailOfModel%d%d%d", workIndex, photoIndex, e)][0],
+				FirstName: form[fmt.Sprintf("firstNameOfModel%d%d%d",
+					workIndex, photoIndex, e)][0],
+				LastName: form[fmt.Sprintf("lastNameOfModel%d%d%d",
+					workIndex, photoIndex, e)][0],
+				Email: form[fmt.Sprintf("emailOfModel%d%d%d",
+					workIndex, photoIndex, e)][0],
 			},
 		}
 	}

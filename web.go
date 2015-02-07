@@ -26,6 +26,7 @@ type Config struct {
 	ArtistEmailBody string
 	ArtistTitle     string
 	ArtistBody      string
+	ModelEmailBody  string
 	ModelTitle      string
 	ModelBody       string
 }
@@ -57,16 +58,36 @@ func FormHandler(w http.ResponseWriter, req *http.Request) {
 	}
 
 	session, err2 := mgo.Dial(config.MongoUrl)
-
 	if err2 != nil {
 		panic(err2)
 	}
 
-	//experimenting with returning the error
-	//or just handling it internally in the
-	//function.
 	makeAPDF(artistForm)
-	err3 := sendEmail(artistForm)
+
+	err3 := sendEmail("PERJUS Magazine release form",
+		config.ArtistEmailBody,
+		true,
+		artistForm.Form)
+
+	//THERE MUST BE A BETTER WAY!!!!!!
+	for i := 0; i < len(artistForm.Works); i++ {
+		for j := 0; j < len(artistForm.Works[i].Photos); j++ {
+			for k := 0; k < len(artistForm.Works[i].Photos[j].Models); k++ {
+				modelErr := sendEmail("PERJUS Magazine model release form",
+					config.ModelEmailBody,
+					false,
+					artistForm.Works[i].Photos[j].Models[k].Form)
+
+				snt := true
+				if modelErr != nil {
+					panic(modelErr)
+					snt = false
+				}
+
+				artistForm.Works[i].Photos[j].Models[k].EmailSent = snt
+			}
+		}
+	}
 
 	sent := true
 	if err3 != nil {
@@ -110,19 +131,20 @@ func makeAPDF(form BaseForm) {
 	}
 }
 
-func sendEmail(artistForm *ArtistForm) error {
+func sendEmail(sub string, bod string, attachPdf bool, form Form) error {
 	var config = getConf()
 	e := &email.Email{
-		To:      []string{artistForm.Email},
+		To:      []string{form.Email},
 		From:    fmt.Sprintf("PERJUS <%s>", config.SenderEmail),
-		Subject: "PERJUS Magazine release forms",
-		Text:    []byte(config.ArtistEmailBody),
-		HTML:    []byte(fmt.Sprintf("<h1>%s</h1>", config.ArtistEmailBody)),
+		Subject: sub,
+		Text:    []byte(bod),
+		HTML:    []byte(fmt.Sprintf("<h1>%s</h1>", bod)),
 		Headers: textproto.MIMEHeader{},
 	}
-
-	e.AttachFile(fmt.Sprintf("%s_release.pdf",
-		strings.ToLower(artistForm.FullName())))
+	if attachPdf {
+		e.AttachFile(fmt.Sprintf("%s_release.pdf",
+			strings.ToLower(form.FullName())))
+	}
 
 	return e.Send("smtp.gmail.com:587",
 		smtp.PlainAuth("", config.SenderEmail, config.SenderPass, "smtp.gmail.com"))
