@@ -3,13 +3,17 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"gopkg.in/mgo.v2/bson"
 	"math/rand"
 	"strconv"
 	"strings"
+	"time"
 )
 
-type Indexable interface {
+type Record interface {
 	SetId()
+	SetCreatedAt()
+	SetUpdatedAt()
 }
 
 type BaseForm interface {
@@ -20,17 +24,27 @@ type BaseForm interface {
 }
 
 type Form struct {
-	Id        string `bson:"_id"`
+	Id        bson.ObjectId `bson:"_id"`
 	FirstName string
 	LastName  string
 	Email     string
 	Link      string
 	Sig       []map[string]int
 	EmailSent bool
+	CreatedAt time.Time
+	UpdatedAt time.Time
 }
 
 func (f *Form) SetId() {
-	f.Id = randomHex()
+	f.Id = bson.NewObjectId()
+}
+
+func (f *Form) SetCreatedAt() {
+	f.CreatedAt = time.Now()
+}
+
+func (f *Form) SetUpdatedAt() {
+	f.UpdatedAt = time.Now()
 }
 
 func (f *Form) FullName() string {
@@ -47,7 +61,7 @@ func (f *Form) SetSignature(sigString string) error {
 
 type ArtistForm struct {
 	Form  `bson:",inline"`
-	Works []Work
+	Works []Work `bson:"works"`
 }
 
 func (a *ArtistForm) IsArtist() bool {
@@ -56,6 +70,23 @@ func (a *ArtistForm) IsArtist() bool {
 
 func (a *ArtistForm) IsModel() bool {
 	return false
+}
+
+func (a *ArtistForm) ModelById(id bson.ObjectId) ModelForm {
+	var m ModelForm
+
+	for i := 0; i < len(a.Works); i++ {
+		for j := 0; j < len(a.Works[i].Photos); j++ {
+			for k := 0; k < len(a.Works[i].Photos[j].Models); k++ {
+				if a.Works[i].Photos[j].Models[k].Id == id {
+					m = a.Works[i].Photos[j].Models[k]
+					break
+				}
+			}
+		}
+	}
+
+	return m
 }
 
 func (a *ArtistForm) SetWorks(form map[string][]string) {
@@ -70,7 +101,7 @@ func (a *ArtistForm) SetWorks(form map[string][]string) {
 		}
 
 		a.Works[i].SetPhotos(form, e)
-		a.Works[i].SetId()
+		writeNewMetaData(&a.Works[i])
 	}
 }
 
@@ -87,14 +118,24 @@ func (m *ModelForm) IsModel() bool {
 }
 
 type Work struct {
-	Id          string `bson:"_id"`
+	Id          bson.ObjectId `bson:"_id"`
 	Name        string
 	Description string
-	Photos      []Photo
+	Photos      []Photo `bson:"photos"`
+	CreatedAt   time.Time
+	UpdatedAt   time.Time
 }
 
 func (w *Work) SetId() {
-	w.Id = randomHex()
+	w.Id = bson.NewObjectId()
+}
+
+func (w *Work) SetCreatedAt() {
+	w.CreatedAt = time.Now()
+}
+
+func (w *Work) SetUpdatedAt() {
+	w.UpdatedAt = time.Now()
 }
 
 func (w *Work) SetPhotos(form map[string][]string, workIndex int) {
@@ -109,18 +150,28 @@ func (w *Work) SetPhotos(form map[string][]string, workIndex int) {
 		}
 
 		w.Photos[i].SetModels(form, workIndex, e)
-		w.Photos[i].SetId()
+		writeNewMetaData(&w.Photos[i])
 	}
 }
 
 type Photo struct {
-	Id     string `bson:"_id"`
-	Name   string
-	Models []ModelForm
+	Id        bson.ObjectId `bson:"_id"`
+	Name      string
+	Models    []ModelForm `bson:"models"`
+	CreatedAt time.Time
+	UpdatedAt time.Time
 }
 
 func (p *Photo) SetId() {
-	p.Id = randomHex()
+	p.Id = bson.NewObjectId()
+}
+
+func (p *Photo) SetCreatedAt() {
+	p.CreatedAt = time.Now()
+}
+
+func (p *Photo) SetUpdatedAt() {
+	p.UpdatedAt = time.Now()
 }
 
 func (p *Photo) SetModels(form map[string][]string, workIndex int,
@@ -143,7 +194,7 @@ func (p *Photo) SetModels(form map[string][]string, workIndex int,
 			},
 		}
 
-		p.Models[i].SetId()
+		writeNewMetaData(&p.Models[i].Form)
 	}
 }
 
@@ -186,4 +237,10 @@ func randomHex() string {
 		b[i] = numbers[rand.Intn(len(numbers))]
 	}
 	return string(b)
+}
+
+func writeNewMetaData(record Record) {
+	record.SetId()
+	record.SetCreatedAt()
+	record.SetUpdatedAt()
 }

@@ -16,6 +16,7 @@ import (
  * Global config
  */
 type Config struct {
+	Url               string
 	MongoUrl          string
 	DbName            string
 	SenderEmail       string
@@ -78,17 +79,15 @@ func makeArtistForm(form map[string][]string) (error, *ArtistForm) {
 	}
 
 	artistForm.SetWorks(form)
-	artistForm.SetId()
+	writeNewMetaData(artistForm)
 	err := artistForm.SetSignature(form["output"][0])
 
 	return err, artistForm
 }
 
 func writeArtistFormToDb(url string, sent bool, artistForm *ArtistForm) error {
-	config := getConf()
-	session, err := mgo.Dial(config.MongoUrl)
 	artistForm.EmailSent = sent
-	artistFormsCollection := session.DB(config.DbName).C("artistForms")
+	err, artistFormsCollection := makeOrGetCollection("artistForms")
 	artistFormsCollection.Insert(artistForm)
 
 	return err
@@ -116,4 +115,10 @@ func sendEmail(sub string, bod string, attachPdf bool, form Form) error {
 
 func sendErrorEmail(err error) {
 	sendEmail("Error Report", err.Error(), false, Form{Email: "nmiano84@gmail.com"})
+}
+
+func makeOrGetCollection(coll string) (error, *mgo.Collection) {
+	config := getConf()
+	session, err := mgo.Dial(config.MongoUrl)
+	return err, session.DB(config.DbName).C("artistForms")
 }
