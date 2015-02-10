@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"github.com/jordan-wright/email"
 	"gopkg.in/mgo.v2"
+	"gopkg.in/mgo.v2/bson"
 	"net/smtp"
 	"net/textproto"
 	"os"
@@ -27,6 +28,13 @@ type Config struct {
 	ModelEmailBodyOne string
 	ModelTitle        string
 	ModelBody         string
+}
+
+type Content struct {
+	ArtistId string
+	ModelId  string
+	Model    ModelForm
+	Conf     *Config
 }
 
 func getConf() (conf *Config) {
@@ -121,4 +129,30 @@ func makeOrGetCollection(coll string) (error, *mgo.Collection) {
 	config := getConf()
 	session, err := mgo.Dial(config.MongoUrl)
 	return err, session.DB(config.DbName).C("artistForms")
+}
+
+func getArtistFromCollection(id bson.ObjectId) (error, ArtistForm) {
+	err, artistForms := makeOrGetCollection("artistForms")
+
+	if err != nil {
+		panic(err)
+	}
+
+	artistForm := ArtistForm{}
+	query := bson.M{"works.photos.models._id": id}
+
+	err1 := artistForms.Find(query).One(&artistForm)
+
+	return err1, artistForm
+}
+
+func makeContent(id bson.ObjectId, artistForm ArtistForm) Content {
+	model := artistForm.ModelById(id)
+
+	return Content{
+		ArtistId: artistForm.Id.Hex(),
+		ModelId:  id.Hex(),
+		Model:    model,
+		Conf:     getConf(),
+	}
 }

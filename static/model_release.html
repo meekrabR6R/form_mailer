@@ -31,6 +31,9 @@
             <label for="emailAddress">Email</label>
             <input type="email" class="form-control" data-parsley-required="true" data-parsley-type="email" value={{.Model.Email}} name="emailAddress" id="emailAddress" placeholder="Email">
           </div>
+           <input type=hidden name="artistId" id="artistId" value={{.ArtistId}}>
+           <input type=hidden name="modelId" id="modelId" value={{.ModelId}}>
+
           <!--
           <div class="form-group">
             <label for="emailAddressConfirmation">Email Confirmation</label>

@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"flag"
 	"fmt"
 	"github.com/gorilla/mux"
@@ -72,36 +73,53 @@ func WorkFormHandler(w http.ResponseWriter, req *http.Request) {
 }
 
 func ModelFormHandler(w http.ResponseWriter, req *http.Request) {
-	vars := mux.Vars(req)
-	id := bson.ObjectIdHex(vars["id"])
-	err, artistForms := makeOrGetCollection("artistForms")
-
-	if err != nil {
-		panic(err)
+	err0 := req.ParseForm()
+	if err0 != nil {
+		panic(err0)
 	}
 
-	artistForm := ArtistForm{}
-	query := bson.M{"works.photos.models._id": id}
-	err1 := artistForms.Find(query).One(&artistForm)
+	form := req.PostForm
+
+	rawSig := []byte(form["output"][0])
+	var sig []map[string]int
+	err1 := json.Unmarshal(rawSig, &sig)
 
 	if err1 != nil {
 		panic(err1)
 	}
 
-	model := artistForm.ModelById(id)
+	selector := bson.M{"_id": bson.ObjectIdHex(form["artistId"][0])}
+	update := bson.M{"$set": bson.M{
+		"works.$.photos.$.models.firstname": form["firstName"][0],
+		"works.$.photos.$.models.lastname":  form["lastName"][0],
+		"works.$.photos.$.models.email":     form["emailAddress"][0],
+		"works.$.photos.$.models.sig":       sig,
+	}}
 
-	type Content struct {
-		Model ModelForm
-		Conf  *Config
+	err2, artistForms := makeOrGetCollection("artistForms")
+
+	if err2 != nil {
+		panic(err2)
 	}
 
-	render := Content{
-		Model: model,
-		Conf:  getConf(),
+	err3 := artistForms.Update(selector, update)
+
+	if err3 != nil {
+		panic(err3)
+	}
+}
+
+func ModelLandingHandler(w http.ResponseWriter, req *http.Request) {
+	vars := mux.Vars(req)
+	id := bson.ObjectIdHex(vars["id"])
+
+	err1, artistForm := getArtistFromCollection(id)
+	if err1 != nil {
+		panic(err1)
 	}
 
 	t, _ := template.ParseFiles("static/model_release.html")
-	t.Execute(w, render)
+	t.Execute(w, makeContent(id, artistForm))
 }
 
 func ThanksHandler(w http.ResponseWriter, req *http.Request) {
@@ -115,8 +133,9 @@ func main() {
 
 	router := mux.NewRouter()
 	router.HandleFunc("/work", WorkFormHandler)
+	router.HandleFunc("/model", ModelFormHandler)
 	router.HandleFunc("/thanks", ThanksHandler)
-	router.HandleFunc("/models/{id}/release", ModelFormHandler)
+	router.HandleFunc("/models/{id}/release", ModelLandingHandler)
 
 	//Must go after all routes..
 	router.PathPrefix("/").Handler(http.FileServer(http.Dir("./static/")))

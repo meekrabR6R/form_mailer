@@ -89,6 +89,10 @@ func (a *ArtistForm) ModelById(id bson.ObjectId) ModelForm {
 	return m
 }
 
+/**
+ * This (and the other array setters) smell a bit. They should be
+ * agnostic w/r/t the original form structure. DECOUPLE THIS STUFF ASAP!
+ */
 func (a *ArtistForm) SetWorks(form map[string][]string) {
 	numItems := getItemCount("descOfWork", form)
 	workIndices := getIndices("descOfWork", form)
@@ -138,6 +142,10 @@ func (w *Work) SetUpdatedAt() {
 	w.UpdatedAt = time.Now()
 }
 
+/**
+ * This (and the other array setters) smell a bit. They should be
+ * agnostic w/r/t the original form structure. DECOUPLE THIS STUFF ASAP!
+ */
 func (w *Work) SetPhotos(form map[string][]string, workIndex int) {
 	filter := fmt.Sprintf("nameOfPhoto%d", workIndex)
 	numItems := getItemCount(filter, form)
@@ -174,6 +182,10 @@ func (p *Photo) SetUpdatedAt() {
 	p.UpdatedAt = time.Now()
 }
 
+/**
+ * This (and the other array setters) smell a bit. They should be
+ * agnostic w/r/t the original form structure. DECOUPLE THIS STUFF ASAP!
+ */
 func (p *Photo) SetModels(form map[string][]string, workIndex int,
 	photoIndex int) {
 
