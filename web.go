@@ -7,6 +7,7 @@ import (
 	"html/template"
 	"net/http"
 	"os"
+	"strings"
 )
 
 func FormHandler(w http.ResponseWriter, req *http.Request) {
@@ -34,10 +35,12 @@ func FormHandler(w http.ResponseWriter, req *http.Request) {
 		for i := 0; i < len(artistForm.Works); i++ {
 			for j := 0; j < len(artistForm.Works[i].Photos); j++ {
 				for k := 0; k < len(artistForm.Works[i].Photos[j].Models); k++ {
-					//At least this will mitigate any slowdown due to O(n^3) complexity!
+					//At least this will mitigate slowdown due to O(n^3) complexity somewhat! :-P
 					go func(iIdx int, jIdx int, kIdx int) {
 						modelErr := sendEmail("PERJUS Magazine model release form",
-							config.ModelEmailBody,
+							fmt.Sprintf(config.ModelEmailBodyOne,
+								strings.ToUpper(artistForm.FullName()),
+								"http://www.google.com"),
 							false,
 							artistForm.Works[iIdx].Photos[jIdx].Models[kIdx].Form)
 

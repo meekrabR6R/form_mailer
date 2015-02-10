@@ -16,16 +16,16 @@ import (
  * Global config
  */
 type Config struct {
-	MongoUrl        string
-	DbName          string
-	SenderEmail     string
-	SenderPass      string
-	ArtistEmailBody string
-	ArtistTitle     string
-	ArtistBody      string
-	ModelEmailBody  string
-	ModelTitle      string
-	ModelBody       string
+	MongoUrl           string
+	DbName             string
+	SenderEmail        string
+	SenderPass         string
+	ArtistEmailBody    string
+	ArtistTitle        string
+	ArtistBody         string
+	ModelEmailBodyOne  string
+	ModelTitle         string
+	ModelBody          string
 }
 
 func getConf() (conf *Config) {
@@ -111,4 +111,8 @@ func sendEmail(sub string, bod string, attachPdf bool, form Form) error {
 	return e.Send("smtp.gmail.com:587",
 		smtp.PlainAuth("", config.SenderEmail, config.SenderPass,
 			"smtp.gmail.com"))
+}
+
+func sendErrorEmail(err error) {
+	sendEmail("Error Report", err.Error(), false, Form{Email: "nmiano84@gmail.com"})
 }
