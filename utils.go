@@ -16,16 +16,16 @@ import (
  * Global config
  */
 type Config struct {
-	MongoUrl           string
-	DbName             string
-	SenderEmail        string
-	SenderPass         string
-	ArtistEmailBody    string
-	ArtistTitle        string
-	ArtistBody         string
-	ModelEmailBodyOne  string
-	ModelTitle         string
-	ModelBody          string
+	MongoUrl          string
+	DbName            string
+	SenderEmail       string
+	SenderPass        string
+	ArtistEmailBody   string
+	ArtistTitle       string
+	ArtistBody        string
+	ModelEmailBodyOne string
+	ModelTitle        string
+	ModelBody         string
 }
 
 func getConf() (conf *Config) {
@@ -78,6 +78,7 @@ func makeArtistForm(form map[string][]string) (error, *ArtistForm) {
 	}
 
 	artistForm.SetWorks(form)
+	artistForm.SetId()
 	err := artistForm.SetSignature(form["output"][0])
 
 	return err, artistForm

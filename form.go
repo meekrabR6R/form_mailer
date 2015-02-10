@@ -3,9 +3,14 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"math/rand"
 	"strconv"
 	"strings"
 )
+
+type Indexable interface {
+	SetId()
+}
 
 type BaseForm interface {
 	FullName() string
@@ -15,12 +20,17 @@ type BaseForm interface {
 }
 
 type Form struct {
+	Id        string `bson:"_id"`
 	FirstName string
 	LastName  string
 	Email     string
 	Link      string
 	Sig       []map[string]int
 	EmailSent bool
+}
+
+func (f *Form) SetId() {
+	f.Id = randomHex()
 }
 
 func (f *Form) FullName() string {
@@ -36,7 +46,7 @@ func (f *Form) SetSignature(sigString string) error {
 }
 
 type ArtistForm struct {
-	Form
+	Form  `bson:",inline"`
 	Works []Work
 }
 
@@ -60,11 +70,12 @@ func (a *ArtistForm) SetWorks(form map[string][]string) {
 		}
 
 		a.Works[i].SetPhotos(form, e)
+		a.Works[i].SetId()
 	}
 }
 
 type ModelForm struct {
-	Form
+	Form `bson:",inline"`
 }
 
 func (m *ModelForm) IsArtist() bool {
@@ -76,9 +87,14 @@ func (m *ModelForm) IsModel() bool {
 }
 
 type Work struct {
+	Id          string `bson:"_id"`
 	Name        string
 	Description string
 	Photos      []Photo
+}
+
+func (w *Work) SetId() {
+	w.Id = randomHex()
 }
 
 func (w *Work) SetPhotos(form map[string][]string, workIndex int) {
@@ -93,12 +109,18 @@ func (w *Work) SetPhotos(form map[string][]string, workIndex int) {
 		}
 
 		w.Photos[i].SetModels(form, workIndex, e)
+		w.Photos[i].SetId()
 	}
 }
 
 type Photo struct {
+	Id     string `bson:"_id"`
 	Name   string
 	Models []ModelForm
+}
+
+func (p *Photo) SetId() {
+	p.Id = randomHex()
 }
 
 func (p *Photo) SetModels(form map[string][]string, workIndex int,
@@ -120,6 +142,8 @@ func (p *Photo) SetModels(form map[string][]string, workIndex int,
 					workIndex, photoIndex, e)][0],
 			},
 		}
+
+		p.Models[i].SetId()
 	}
 }
 
@@ -153,4 +177,13 @@ func getIndices(filter string, form map[string][]string) []int {
 		}
 	}
 	return indices
+}
+
+func randomHex() string {
+	var numbers = []rune("abcdef0123456789")
+	b := make([]rune, 32)
+	for i := range b {
+		b[i] = numbers[rand.Intn(len(numbers))]
+	}
+	return string(b)
 }
