@@ -4,45 +4,38 @@
     <meta charset="UTF-8">
     <title>Perjus Release Form</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
-    <link rel="stylesheet" href="lib/jquery.signaturepad.css">
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="{{.Conf.Url}}/lib/jquery.signaturepad.css">
+    <link rel="stylesheet" href="{{.Conf.Url}}/style.css">
     <!--[if lt IE 9]><script src="lib/sign-pad/assets/flashcanvas.js"></script><![endif]-->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
-    <script src="lib/jquery.signaturepad.min.js"></script>
-    <script src="lib/parsley.min.js"></script>
-    <script src="lib/json2.min.js"></script>
+    <script src="{{.Conf.Url}}/lib/jquery.signaturepad.min.js"></script>
+    <script src="{{.Conf.Url}}/lib/parsley.min.js"></script>
+    <script src="{{.Conf.Url}}/lib/json2.min.js"></script>
 
   </head>
   <body>
     <div class="container-fluid main-body">
-      <h1>PERJUS Release Form</h1>
-      <form class="sigPad" action="/work" method="post" data-parsley-validate>
+      <h1>PERJUS Model Release Form</h1>
+      <form class="sigPad" action="/model" method="post" data-parsley-validate>
         <div id="release">
           <div class="form-group">
             <label for="firstName">First Name</label>
-            <input type="text" class="form-control" data-parsley-required="true" name="firstName" id="firstName" placeholder="First Name">
+            <input type="text" class="form-control" data-parsley-required="true" value={{.Model.FirstName}} name="firstName" id="firstName" placeholder="First Name">
           </div>
           <div class="form-group">
             <label for="lastName">Last Name</label>
-            <input type="text" class="form-control" data-parsley-required="true" name="lastName" id="lastName" placeholder="Last Name">
+            <input type="text" class="form-control" data-parsley-required="true" value={{.Model.LastName}} name="lastName" id="lastName" placeholder="Last Name">
           </div>
           <div class="form-group">
             <label for="emailAddress">Email</label>
-            <input type="email" class="form-control" data-parsley-required="true" data-parsley-type="email" name="emailAddress" id="emailAddress" placeholder="Email">
+            <input type="email" class="form-control" data-parsley-required="true" data-parsley-type="email" value={{.Model.Email}} name="emailAddress" id="emailAddress" placeholder="Email">
           </div>
           <!--
           <div class="form-group">
             <label for="emailAddressConfirmation">Email Confirmation</label>
             <input type="email" class="form-control" data-parsley-required="true" data-parsley-type="email" id="emailAddressConfirmation" placeholder="Email Confirmation">
           </div> -->
-          <div class="form-group">
-            <label for="downloadLink">Download Link (Dropbox, etc.)</label>
-            <input type="url" class="form-control" data-parsley-required="true" data-parsley-type="url" name="downloadLink" id="downloadLink" placeholder="Download Link">
-          </div>
-        </div>
-        <div id="add-work-btn-wrapper" class="form-group">
-          <button id="add-work-btn" type="Button" class="btn btn-default">+ Add Work</button>
         </div>
           <p class="drawItDesc">Draw your signature</p>
           <ul class="sigNav">
@@ -57,6 +50,6 @@
         <button type="submit" class="btn btn-default">Submit</button>
       </form>
     </div>
-    <script src="helper.js"></script>
+    <script src="{{.Conf.Url}}/helper.js"></script>
   </body>
 </html>

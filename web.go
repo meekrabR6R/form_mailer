@@ -90,8 +90,18 @@ func ModelFormHandler(w http.ResponseWriter, req *http.Request) {
 
 	model := artistForm.ModelById(id)
 
-	fmt.Println(id)
-	fmt.Println(model)
+	type Content struct {
+		Model ModelForm
+		Conf  *Config
+	}
+
+	render := Content{
+		Model: model,
+		Conf:  getConf(),
+	}
+
+	t, _ := template.ParseFiles("static/model_release.html")
+	t.Execute(w, render)
 }
 
 func ThanksHandler(w http.ResponseWriter, req *http.Request) {
