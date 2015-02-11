@@ -101,30 +101,6 @@ func writeArtistFormToDb(url string, sent bool, artistForm *ArtistForm) error {
 	return err
 }
 
-func sendEmail(sub string, bod string, attachPdf bool, form Form) error {
-	var config = getConf()
-	e := &email.Email{
-		To:      []string{form.Email},
-		From:    fmt.Sprintf("PERJUS <%s>", config.SenderEmail),
-		Subject: sub,
-		Text:    []byte(bod),
-		HTML:    []byte(fmt.Sprintf("<h1>%s</h1>", bod)),
-		Headers: textproto.MIMEHeader{},
-	}
-	if attachPdf {
-		e.AttachFile(fmt.Sprintf("%s_release.pdf",
-			strings.ToLower(form.FullName())))
-	}
-
-	return e.Send("smtp.gmail.com:587",
-		smtp.PlainAuth("", config.SenderEmail, config.SenderPass,
-			"smtp.gmail.com"))
-}
-
-func sendErrorEmail(err error) {
-	sendEmail("Error Report", err.Error(), false, Form{Email: "nmiano84@gmail.com"})
-}
-
 func makeOrGetCollection(coll string) (error, *mgo.Collection) {
 	config := getConf()
 	session, err := mgo.Dial(config.MongoUrl)
@@ -157,10 +133,46 @@ func makeContent(id bson.ObjectId, artistForm ArtistForm) Content {
 	}
 }
 
+/**
+ * Email needs to be its own parameter so this function
+ * can be used to send admin email too
+ */
+func sendEmail(emailAddress string, sub string, bod string,
+	attachPdf bool, form Form) error {
+
+	var config = getConf()
+	e := &email.Email{
+		To:      []string{emailAddress},
+		From:    fmt.Sprintf("PERJUS <%s>", config.SenderEmail),
+		Subject: sub,
+		Text:    []byte(bod),
+		HTML:    []byte(fmt.Sprintf("<h1>%s</h1>", bod)),
+		Headers: textproto.MIMEHeader{},
+	}
+	if attachPdf {
+		e.AttachFile(fmt.Sprintf("%s_release.pdf",
+			strings.ToLower(form.FullName())))
+	}
+
+	return e.Send("smtp.gmail.com:587",
+		smtp.PlainAuth("", config.SenderEmail, config.SenderPass,
+			"smtp.gmail.com"))
+}
+
+func sendErrorEmail(err error) {
+	config := getConf()
+	sendEmail(config.SenderEmail, "Error Report", err.Error(), false, Form{Email: "nmiano84@gmail.com"})
+}
+
+/**
+ * Wrapper function for generating pdf and sending email
+ * to artist
+ */
 func sendArtistEmail(artistForm *ArtistForm) (error, bool) {
 	config := getConf()
 	makeAPDF(artistForm)
-	err := sendEmail("PERJUS Magazine release form",
+	err := sendEmail(artistForm.Form.Email,
+		"PERJUS Magazine release form",
 		config.ArtistEmailBody,
 		true,
 		artistForm.Form)
@@ -174,32 +186,50 @@ func sendArtistEmail(artistForm *ArtistForm) (error, bool) {
 	return err, sent
 }
 
+func sendAdminEmail() {
+
+}
+
+func sendModelEmail(artistForm *ArtistForm, modelForm ModelForm) (error, bool) {
+	config := getConf()
+
+	url := fmt.Sprintf("%s/models/%s/release", config.Url,
+		modelForm.Id.Hex())
+	modelErr := sendEmail(modelForm.Email,
+		"PERJUS Magazine model release form",
+		fmt.Sprintf(config.ModelEmailBodyOne,
+			strings.ToUpper(artistForm.FullName()),
+			url),
+		false,
+		modelForm.Form)
+
+	snt := true
+	if modelErr != nil {
+		//panic(modelErr)
+		snt = false
+	}
+
+	return modelErr, snt
+}
+
 /**
- * Sends emails to each model that belongs to an ArtistForm
+ * Ugly little helper function that sends emails
+ * to each model that belongs to an ArtistForm.
+ * It is insanely inefficient, and could use some
+ * optimization :)
  * (Should ideally be run in its own goroutine)
  */
-func sendAllEmails(artistForm *ArtistForm) {
-	config := getConf()
+func sendAllModelEmails(artistForm *ArtistForm) {
 	//THERE MUST BE A BETTER WAY!!!!!!
 	for i := 0; i < len(artistForm.Works); i++ {
 		for j := 0; j < len(artistForm.Works[i].Photos); j++ {
 			for k := 0; k < len(artistForm.Works[i].Photos[j].Models); k++ {
 				//At least this will mitigate slowdown due to O(n^3) complexity somewhat! :-P
 				go func(iIdx int, jIdx int, kIdx int) {
-					url := fmt.Sprintf("%s/models/%s/release", config.Url,
-						artistForm.Works[iIdx].Photos[jIdx].Models[kIdx].Id.Hex())
-					fmt.Println(url)
-					modelErr := sendEmail("PERJUS Magazine model release form",
-						fmt.Sprintf(config.ModelEmailBodyOne,
-							strings.ToUpper(artistForm.FullName()),
-							url),
-						false,
-						artistForm.Works[iIdx].Photos[jIdx].Models[kIdx].Form)
-
-					snt := true
+					modelErr, snt := sendModelEmail(artistForm,
+						artistForm.Works[iIdx].Photos[jIdx].Models[kIdx])
 					if modelErr != nil {
 						panic(modelErr)
-						snt = false
 					}
 
 					artistForm.Works[iIdx].Photos[jIdx].Models[kIdx].EmailSent = snt

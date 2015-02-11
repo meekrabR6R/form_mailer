@@ -30,7 +30,7 @@ func WorkFormHandler(w http.ResponseWriter, req *http.Request) {
 		if err2 != nil {
 			panic(err2)
 		}
-		sendAllEmails(artistForm)
+		sendAllModelEmails(artistForm)
 		writeArtistFormToDb(config.MongoUrl, sent, artistForm)
 	}()
 
