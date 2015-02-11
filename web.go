@@ -9,7 +9,6 @@ import (
 	"html/template"
 	"net/http"
 	"os"
-	"strings"
 )
 
 func WorkFormHandler(w http.ResponseWriter, req *http.Request) {
@@ -27,45 +26,11 @@ func WorkFormHandler(w http.ResponseWriter, req *http.Request) {
 	}
 
 	go func() {
-		makeAPDF(artistForm)
-		err3 := sendEmail("PERJUS Magazine release form",
-			config.ArtistEmailBody,
-			true,
-			artistForm.Form)
-
-		//THERE MUST BE A BETTER WAY!!!!!!
-		for i := 0; i < len(artistForm.Works); i++ {
-			for j := 0; j < len(artistForm.Works[i].Photos); j++ {
-				for k := 0; k < len(artistForm.Works[i].Photos[j].Models); k++ {
-					//At least this will mitigate slowdown due to O(n^3) complexity somewhat! :-P
-					go func(iIdx int, jIdx int, kIdx int) {
-						url := fmt.Sprintf("%s/models/%s/release", config.Url,
-							artistForm.Works[iIdx].Photos[jIdx].Models[kIdx].Id.Hex())
-						fmt.Println(url)
-						modelErr := sendEmail("PERJUS Magazine model release form",
-							fmt.Sprintf(config.ModelEmailBodyOne,
-								strings.ToUpper(artistForm.FullName()),
-								url),
-							false,
-							artistForm.Works[iIdx].Photos[jIdx].Models[kIdx].Form)
-
-						snt := true
-						if modelErr != nil {
-							panic(modelErr)
-							snt = false
-						}
-
-						artistForm.Works[iIdx].Photos[jIdx].Models[kIdx].EmailSent = snt
-					}(i, j, k)
-				}
-			}
+		err2, sent := sendArtistEmail(artistForm)
+		if err2 != nil {
+			panic(err2)
 		}
-
-		sent := true
-		if err3 != nil {
-			panic(err3)
-			sent = false
-		}
+		sendAllEmails(artistForm)
 		writeArtistFormToDb(config.MongoUrl, sent, artistForm)
 	}()
 

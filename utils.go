@@ -156,3 +156,55 @@ func makeContent(id bson.ObjectId, artistForm ArtistForm) Content {
 		Conf:     getConf(),
 	}
 }
+
+func sendArtistEmail(artistForm *ArtistForm) (error, bool) {
+	config := getConf()
+	makeAPDF(artistForm)
+	err := sendEmail("PERJUS Magazine release form",
+		config.ArtistEmailBody,
+		true,
+		artistForm.Form)
+
+	sent := true
+	if err != nil {
+		//panic(err3)
+		sent = false
+	}
+
+	return err, sent
+}
+
+/**
+ * Sends emails to each model that belongs to an ArtistForm
+ * (Should ideally be run in its own goroutine)
+ */
+func sendAllEmails(artistForm *ArtistForm) {
+	config := getConf()
+	//THERE MUST BE A BETTER WAY!!!!!!
+	for i := 0; i < len(artistForm.Works); i++ {
+		for j := 0; j < len(artistForm.Works[i].Photos); j++ {
+			for k := 0; k < len(artistForm.Works[i].Photos[j].Models); k++ {
+				//At least this will mitigate slowdown due to O(n^3) complexity somewhat! :-P
+				go func(iIdx int, jIdx int, kIdx int) {
+					url := fmt.Sprintf("%s/models/%s/release", config.Url,
+						artistForm.Works[iIdx].Photos[jIdx].Models[kIdx].Id.Hex())
+					fmt.Println(url)
+					modelErr := sendEmail("PERJUS Magazine model release form",
+						fmt.Sprintf(config.ModelEmailBodyOne,
+							strings.ToUpper(artistForm.FullName()),
+							url),
+						false,
+						artistForm.Works[iIdx].Photos[jIdx].Models[kIdx].Form)
+
+					snt := true
+					if modelErr != nil {
+						panic(modelErr)
+						snt = false
+					}
+
+					artistForm.Works[iIdx].Photos[jIdx].Models[kIdx].EmailSent = snt
+				}(i, j, k)
+			}
+		}
+	}
+}
