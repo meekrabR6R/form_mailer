@@ -72,6 +72,19 @@ func (a *ArtistForm) IsModel() bool {
 	return false
 }
 
+func (a *ArtistForm) SetModelSigById(id bson.ObjectId, sig string) {
+	for i := 0; i < len(a.Works); i++ {
+		for j := 0; j < len(a.Works[i].Photos); j++ {
+			for k := 0; k < len(a.Works[i].Photos[j].Models); k++ {
+				if a.Works[i].Photos[j].Models[k].Id == id {
+					a.Works[i].Photos[j].Models[k].SetSignature(sig)
+					break
+				}
+			}
+		}
+	}
+}
+
 func (a *ArtistForm) ModelById(id bson.ObjectId) ModelForm {
 	var m ModelForm
 

@@ -1,7 +1,6 @@
 package main
 
 import (
-	"encoding/json"
 	"flag"
 	"fmt"
 	"github.com/gorilla/mux"
@@ -45,21 +44,17 @@ func ModelFormHandler(w http.ResponseWriter, req *http.Request) {
 
 	form := req.PostForm
 
-	rawSig := []byte(form["output"][0])
-	var sig []map[string]int
-	err1 := json.Unmarshal(rawSig, &sig)
+	/*
+		rawSig := []byte(form["output"][0])
+		var sig []map[string]int
+		err1 := json.Unmarshal(rawSig, &sig)
 
-	if err1 != nil {
-		panic(err1)
-	}
-
-	selector := bson.M{"_id": bson.ObjectIdHex(form["artistId"][0])}
-	update := bson.M{"$set": bson.M{
-		"works.$.photos.$.models.firstname": form["firstName"][0],
-		"works.$.photos.$.models.lastname":  form["lastName"][0],
-		"works.$.photos.$.models.email":     form["emailAddress"][0],
-		"works.$.photos.$.models.sig":       sig,
-	}}
+		if err1 != nil {
+			panic(err1)
+		}
+	*/
+	artistId := bson.ObjectIdHex(form["artistId"][0])
+	modelId := bson.ObjectIdHex(form["modelId"][0])
 
 	err2, artistForms := makeOrGetCollection("artistForms")
 
@@ -67,11 +62,28 @@ func ModelFormHandler(w http.ResponseWriter, req *http.Request) {
 		panic(err2)
 	}
 
-	err3 := artistForms.Update(selector, update)
+	var artist ArtistForm
+	artistForms.FindId(artistId).One(&artist)
 
-	if err3 != nil {
-		panic(err3)
-	}
+	artist.SetModelSigById(modelId, form["output"][0])
+
+	/*
+		selector := bson.M{"_id": bson.ObjectIdHex(form["artistId"][0])}
+
+		update := bson.M{"$set": bson.M{
+			"works.$.photos.$.models.firstname": form["firstName"][0],
+			"works.$.photos.$.models.lastname":  form["lastName"][0],
+			"works.$.photos.$.models.email":     form["emailAddress"][0],
+			"works.$.photos.$.models.sig":       sig,
+		}}
+
+			err3 := artistForms.Update(selector, update)
+
+			if err3 != nil {
+				panic(err3)
+			}
+	*/
+	artistForms.UpdateId(artistId, artist)
 }
 
 func ModelLandingHandler(w http.ResponseWriter, req *http.Request) {
