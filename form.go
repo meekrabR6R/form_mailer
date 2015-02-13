@@ -85,7 +85,20 @@ func (a *ArtistForm) SetModelSigById(id bson.ObjectId, sig string) {
 	}
 }
 
-func (a *ArtistForm) ModelById(id bson.ObjectId) ModelForm {
+func (a *ArtistForm) SetModelSentById(id bson.ObjectId, sent bool) {
+	for i := 0; i < len(a.Works); i++ {
+		for j := 0; j < len(a.Works[i].Photos); j++ {
+			for k := 0; k < len(a.Works[i].Photos[j].Models); k++ {
+				if a.Works[i].Photos[j].Models[k].Id == id {
+					a.Works[i].Photos[j].Models[k].EmailSent = sent
+					break
+				}
+			}
+		}
+	}
+}
+
+func (a *ArtistForm) ModelById(id bson.ObjectId) *ModelForm {
 	var m ModelForm
 
 	for i := 0; i < len(a.Works); i++ {
@@ -99,7 +112,7 @@ func (a *ArtistForm) ModelById(id bson.ObjectId) ModelForm {
 		}
 	}
 
-	return m
+	return &m
 }
 
 /**

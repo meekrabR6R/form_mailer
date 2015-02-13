@@ -44,15 +44,6 @@ func ModelFormHandler(w http.ResponseWriter, req *http.Request) {
 
 	form := req.PostForm
 
-	/*
-		rawSig := []byte(form["output"][0])
-		var sig []map[string]int
-		err1 := json.Unmarshal(rawSig, &sig)
-
-		if err1 != nil {
-			panic(err1)
-		}
-	*/
 	artistId := bson.ObjectIdHex(form["artistId"][0])
 	modelId := bson.ObjectIdHex(form["modelId"][0])
 
@@ -62,28 +53,20 @@ func ModelFormHandler(w http.ResponseWriter, req *http.Request) {
 		panic(err2)
 	}
 
-	var artist ArtistForm
-	artistForms.FindId(artistId).One(&artist)
+	go func() {
+		var artist ArtistForm
+		artistForms.FindId(artistId).One(&artist)
+		artist.SetModelSigById(modelId, form["output"][0])
+		artistForms.UpdateId(artistId, artist)
+		model := artist.ModelById(modelId)
+		err3, sent := sendModelEmailWithForm(model)
+		if err3 != nil {
+			panic(err3)
+		}
+		artist.SetModelSentById(modelId, sent)
+	}()
 
-	artist.SetModelSigById(modelId, form["output"][0])
-
-	/*
-		selector := bson.M{"_id": bson.ObjectIdHex(form["artistId"][0])}
-
-		update := bson.M{"$set": bson.M{
-			"works.$.photos.$.models.firstname": form["firstName"][0],
-			"works.$.photos.$.models.lastname":  form["lastName"][0],
-			"works.$.photos.$.models.email":     form["emailAddress"][0],
-			"works.$.photos.$.models.sig":       sig,
-		}}
-
-			err3 := artistForms.Update(selector, update)
-
-			if err3 != nil {
-				panic(err3)
-			}
-	*/
-	artistForms.UpdateId(artistId, artist)
+	http.Redirect(w, req, "/thanks", 301)
 }
 
 func ModelLandingHandler(w http.ResponseWriter, req *http.Request) {

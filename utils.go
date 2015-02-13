@@ -123,7 +123,7 @@ func getArtistFromCollection(id bson.ObjectId) (error, ArtistForm) {
 }
 
 func makeContent(id bson.ObjectId, artistForm ArtistForm) Content {
-	model := artistForm.ModelById(id)
+	model := *artistForm.ModelById(id)
 
 	return Content{
 		ArtistId: artistForm.Id.Hex(),
@@ -190,7 +190,7 @@ func sendAdminEmail() {
 
 }
 
-func sendModelEmail(artistForm *ArtistForm, modelForm ModelForm) (error, bool) {
+func sendModelEmailWithLink(artistForm *ArtistForm, modelForm ModelForm) (error, bool) {
 	config := getConf()
 
 	url := fmt.Sprintf("%s/models/%s/release", config.Url,
@@ -212,6 +212,24 @@ func sendModelEmail(artistForm *ArtistForm, modelForm ModelForm) (error, bool) {
 	return modelErr, snt
 }
 
+func sendModelEmailWithForm(modelForm *ModelForm) (error, bool) {
+	config := getConf()
+	makeAPDF(modelForm)
+	err := sendEmail(modelForm.Form.Email,
+		"PERJUS Magazine release form",
+		config.ArtistEmailBody,
+		true,
+		modelForm.Form)
+
+	sent := true
+	if err != nil {
+		//panic(err3)
+		sent = false
+	}
+
+	return err, sent
+}
+
 /**
  * Ugly little helper function that sends emails
  * to each model that belongs to an ArtistForm.
@@ -226,7 +244,7 @@ func sendAllModelEmails(artistForm *ArtistForm) {
 			for k := 0; k < len(artistForm.Works[i].Photos[j].Models); k++ {
 				//At least this will mitigate slowdown due to O(n^3) complexity somewhat! :-P
 				go func(iIdx int, jIdx int, kIdx int) {
-					modelErr, snt := sendModelEmail(artistForm,
+					modelErr, snt := sendModelEmailWithLink(artistForm,
 						artistForm.Works[iIdx].Photos[jIdx].Models[kIdx])
 					if modelErr != nil {
 						panic(modelErr)
