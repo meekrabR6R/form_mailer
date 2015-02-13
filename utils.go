@@ -138,7 +138,7 @@ func makeContent(id bson.ObjectId, artistForm ArtistForm) Content {
  * can be used to send admin email too
  */
 func sendEmail(emailAddress string, sub string, bod string,
-	attachPdf bool, form Form) error {
+	attachPdf bool, form BaseForm) error {
 
 	var config = getConf()
 	e := &email.Email{
@@ -159,10 +159,10 @@ func sendEmail(emailAddress string, sub string, bod string,
 			"smtp.gmail.com"))
 }
 
-func sendErrorEmail(err error) {
-	config := getConf()
-	sendEmail(config.SenderEmail, "Error Report", err.Error(), false, Form{Email: "nmiano84@gmail.com"})
-}
+//func sendErrorEmail(err error) {
+//	config := getConf()
+//	sendEmail(config.SenderEmail, "Error Report", err.Error(), false, Form{Email: "nmiano84@gmail.com"})
+//}
 
 /**
  * Wrapper function for generating pdf and sending email
@@ -175,7 +175,7 @@ func sendArtistEmail(artistForm *ArtistForm) (error, bool) {
 		"PERJUS Magazine release form",
 		config.ArtistEmailBody,
 		true,
-		artistForm.Form)
+		artistForm)
 
 	sent := true
 	if err != nil {
@@ -186,11 +186,24 @@ func sendArtistEmail(artistForm *ArtistForm) (error, bool) {
 	return err, sent
 }
 
-func sendAdminEmail() {
-
+func sendAdminEmail(form BaseForm) (error, bool) {
+	config := getConf()
+	makeAPDF(form)
+	err := sendEmail(config.SenderEmail,
+		fmt.Sprintf("%s - Signed Release Forms - Issue %d",
+			strings.ToUpper(form.FullName()),
+			2), //temp holder for version
+		"basic info",
+		true,
+		form)
+	sent := true
+	if err != nil {
+		sent = false
+	}
+	return err, sent
 }
 
-func sendModelEmailWithLink(artistForm *ArtistForm, modelForm ModelForm) (error, bool) {
+func sendModelEmailWithLink(artistForm *ArtistForm, modelForm *ModelForm) (error, bool) {
 	config := getConf()
 
 	url := fmt.Sprintf("%s/models/%s/release", config.Url,
@@ -201,7 +214,7 @@ func sendModelEmailWithLink(artistForm *ArtistForm, modelForm ModelForm) (error,
 			strings.ToUpper(artistForm.FullName()),
 			url),
 		false,
-		modelForm.Form)
+		modelForm)
 
 	snt := true
 	if modelErr != nil {
@@ -219,7 +232,7 @@ func sendModelEmailWithForm(modelForm *ModelForm) (error, bool) {
 		"PERJUS Magazine release form",
 		config.ArtistEmailBody,
 		true,
-		modelForm.Form)
+		modelForm)
 
 	sent := true
 	if err != nil {
@@ -245,7 +258,7 @@ func sendAllModelEmails(artistForm *ArtistForm) {
 				//At least this will mitigate slowdown due to O(n^3) complexity somewhat! :-P
 				go func(iIdx int, jIdx int, kIdx int) {
 					modelErr, snt := sendModelEmailWithLink(artistForm,
-						artistForm.Works[iIdx].Photos[jIdx].Models[kIdx])
+						&artistForm.Works[iIdx].Photos[jIdx].Models[kIdx])
 					if modelErr != nil {
 						panic(modelErr)
 					}

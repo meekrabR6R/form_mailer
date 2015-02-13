@@ -29,7 +29,9 @@ func WorkFormHandler(w http.ResponseWriter, req *http.Request) {
 		if err2 != nil {
 			panic(err2)
 		}
+		sendAdminEmail(artistForm)
 		sendAllModelEmails(artistForm)
+
 		writeArtistFormToDb(config.MongoUrl, sent, artistForm)
 	}()
 
@@ -47,10 +49,10 @@ func ModelFormHandler(w http.ResponseWriter, req *http.Request) {
 	artistId := bson.ObjectIdHex(form["artistId"][0])
 	modelId := bson.ObjectIdHex(form["modelId"][0])
 
-	err2, artistForms := makeOrGetCollection("artistForms")
+	err1, artistForms := makeOrGetCollection("artistForms")
 
-	if err2 != nil {
-		panic(err2)
+	if err1 != nil {
+		panic(err1)
 	}
 
 	go func() {
@@ -59,6 +61,14 @@ func ModelFormHandler(w http.ResponseWriter, req *http.Request) {
 		artist.SetModelSigById(modelId, form["output"][0])
 		artistForms.UpdateId(artistId, artist)
 		model := artist.ModelById(modelId)
+
+		//TODO Store Admin Sent status
+		err2, adminSent := sendAdminEmail(model)
+		if err2 != nil {
+			fmt.Println(adminSent)
+			panic(err2)
+		}
+
 		err3, sent := sendModelEmailWithForm(model)
 		if err3 != nil {
 			panic(err3)
