@@ -1,9 +1,13 @@
 {
+	"url": "http://127.0.0.1:3000",
+	"mongourl": "mongodb://127.0.0.1",
+	"dbname": "",
 	"senderemail": "",
 	"senderpass": "",
-	"artistemail": "",
+	"artistemailbody": "",
 	"artisttitle": "",
 	"artistbody": "",
+	"modelemailbodyone": "",
 	"modeltitle": "",
-	"modelbody": ""
+	"modelbody": "",
 }

@@ -14,7 +14,8 @@ func WorkFormHandler(w http.ResponseWriter, req *http.Request) {
 	var config = getConf()
 	err0 := req.ParseForm()
 	if err0 != nil {
-		panic(err0)
+		//panic(err0)
+		errorHandler(w, req, err0)
 	}
 
 	form := req.PostForm
@@ -27,7 +28,8 @@ func WorkFormHandler(w http.ResponseWriter, req *http.Request) {
 	go func() {
 		err2, sent := sendArtistEmail(artistForm)
 		if err2 != nil {
-			panic(err2)
+			//panic(err2)
+			errorHandler(w, req, err2)
 		}
 		sendAdminEmail(artistForm)
 		sendAllModelEmails(artistForm)

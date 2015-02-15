@@ -16,6 +16,7 @@ import (
 /**
  * Global config
  */
+
 type Config struct {
 	Url               string
 	MongoUrl          string
@@ -208,6 +209,7 @@ func sendModelEmailWithLink(artistForm *ArtistForm, modelForm *ModelForm) (error
 
 	url := fmt.Sprintf("%s/models/%s/release", config.Url,
 		modelForm.Id.Hex())
+
 	modelErr := sendEmail(modelForm.Email,
 		"PERJUS Magazine model release form",
 		fmt.Sprintf(config.ModelEmailBodyOne,
