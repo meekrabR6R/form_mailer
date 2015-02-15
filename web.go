@@ -41,7 +41,8 @@ func WorkFormHandler(w http.ResponseWriter, req *http.Request) {
 func ModelFormHandler(w http.ResponseWriter, req *http.Request) {
 	err0 := req.ParseForm()
 	if err0 != nil {
-		panic(err0)
+		//panic(err0)
+		errorHandler(w, req, err0)
 	}
 
 	form := req.PostForm
@@ -52,7 +53,8 @@ func ModelFormHandler(w http.ResponseWriter, req *http.Request) {
 	err1, artistForms := makeOrGetCollection("artistForms")
 
 	if err1 != nil {
-		panic(err1)
+		//panic(err1)
+		errorHandler(w, req, err1)
 	}
 
 	go func() {
@@ -66,12 +68,14 @@ func ModelFormHandler(w http.ResponseWriter, req *http.Request) {
 		err2, adminSent := sendAdminEmail(model)
 		if err2 != nil {
 			fmt.Println(adminSent)
-			panic(err2)
+			//panic(err2)
+			errorHandler(w, req, err2)
 		}
 
 		err3, sent := sendModelEmailWithForm(model)
 		if err3 != nil {
-			panic(err3)
+			//panic(err3)
+			errorHandler(w, req, err3)
 		}
 		artist.SetModelSentById(modelId, sent)
 	}()
@@ -83,9 +87,10 @@ func ModelLandingHandler(w http.ResponseWriter, req *http.Request) {
 	vars := mux.Vars(req)
 	id := bson.ObjectIdHex(vars["id"])
 
-	err1, artistForm := getArtistFromCollection(id)
-	if err1 != nil {
-		panic(err1)
+	err, artistForm := getArtistFromCollection(id)
+	if err != nil {
+		errorHandler(w, req, err)
+		//panic(err1)
 	}
 
 	t, _ := template.ParseFiles("static/model_release.html")
@@ -95,6 +100,12 @@ func ModelLandingHandler(w http.ResponseWriter, req *http.Request) {
 func ThanksHandler(w http.ResponseWriter, req *http.Request) {
 	t, _ := template.ParseFiles("static/release_landing_page.html")
 	t.Execute(w, new(interface{}))
+}
+
+func errorHandler(w http.ResponseWriter, r *http.Request, err error) {
+	w.WriteHeader(500)
+	errString := fmt.Sprint("Something broke.. :-/ womp womp:\n %s ")
+	fmt.Fprint(w, errString)
 }
 
 func main() {
