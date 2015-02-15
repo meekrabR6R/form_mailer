@@ -165,7 +165,7 @@ func sendEmail(emailAddress string, sub string, bod string,
 	}
 	if attachPdf {
 		e.AttachFile(fmt.Sprintf("%s_release.pdf",
-			strings.ToLower(form.FullName())))
+			strings.ToLower(form.FullNameForFile())))
 	}
 
 	return e.Send("smtp.gmail.com:587",
