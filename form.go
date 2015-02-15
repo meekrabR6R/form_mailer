@@ -18,6 +18,7 @@ type Record interface {
 
 type BaseForm interface {
 	FullName() string
+	FullNameForFile() string
 	SetSignature(string) error
 	IsArtist() bool
 	IsModel() bool

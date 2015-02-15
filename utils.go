@@ -72,7 +72,7 @@ func makeAPDF(form BaseForm) {
 	pdf.MultiCell(185, 5, pdfBody, "", "", false)
 
 	err := pdf.OutputFileAndClose(
-		fmt.Sprintf("%s_release.pdf", form.FullName()))
+		fmt.Sprintf("%s_release.pdf", form.FullNameForFile()))
 
 	if err != nil {
 		panic(err)
