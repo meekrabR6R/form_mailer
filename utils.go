@@ -20,6 +20,8 @@ import (
 type Config struct {
 	Url               string
 	MongoUrl          string
+	MongoUser         string
+	MongoPass         string
 	DbName            string
 	SenderEmail       string
 	SenderPass        string
@@ -106,6 +108,13 @@ func makeOrGetCollection(coll string) (error, *mgo.Collection) {
 	config := getConf()
 	session, err := mgo.Dial(config.MongoUrl)
 	return err, session.DB(config.DbName).C("artistForms")
+}
+
+func setUpDb() error {
+	config := getConf()
+	session, err := mgo.Dial(config.MongoUrl)
+	session.DB(config.DbName).Login(config.MongoUser, config.MongoPass)
+	return err
 }
 
 func getArtistFromCollection(id bson.ObjectId) (error, ArtistForm) {

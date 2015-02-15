@@ -126,6 +126,11 @@ func main() {
 
 	bind := fmt.Sprintf("%s:%s", os.Getenv("HOST"), os.Getenv("PORT"))
 
+	dbErr := setUpDb()
+	if dbErr != nil {
+		panic(dbErr)
+	}
+
 	if *portPtr != "foo" {
 		fmt.Printf("listening on %s...\n", *portPtr)
 		port := fmt.Sprintf(":%s", *portPtr)
