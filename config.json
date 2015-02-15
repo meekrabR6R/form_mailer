@@ -3,7 +3,7 @@
 	"mongourl": "mongodb://$OPENSHIFT_MONGODB_DB_HOST:$OPENSHIFT_MONGODB_DB_PORT/",
 	"mongouser": "admin",
 	"mongopass": "TRyF94SslFzk",
-	"dbname": "perjus",
+	"dbname": "perjusmagrelease",
 	"senderemail": "nmiano84@gmail.com",
 	"senderpass": "NM1@bann",
 	"artistemailbody": "Please see attached release form for your submissions to PERJUS Magazine. Please reach out to perjusmag@gmail.com if you have any questions. Do not reply to this email.",
