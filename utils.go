@@ -108,7 +108,8 @@ func makeOrGetCollection(coll string) (error, *mgo.Collection) {
 	config := getConf()
 	session, err := mgo.Dial(config.MongoUrl)
 	session.Login(&mgo.Credential{Username: config.MongoUser,
-		Password: config.MongoPass})
+		Password: config.MongoPass,
+		Source:   config.DbName})
 	return err, session.DB(config.DbName).C(coll)
 }
 
