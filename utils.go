@@ -107,16 +107,19 @@ func writeArtistFormToDb(url string, sent bool, artistForm *ArtistForm) error {
 func makeOrGetCollection(coll string) (error, *mgo.Collection) {
 	config := getConf()
 	session, err := mgo.Dial(config.MongoUrl)
+	session.DB(config.DbName).Login(config.MongoUser, config.MongoPass)
 	return err, session.DB(config.DbName).C("artistForms")
 }
 
+/*
 func setUpDb() error {
 	config := getConf()
+	fmt.Println(config.MongoPass)
 	session, err := mgo.Dial(config.MongoUrl)
 	session.DB(config.DbName).Login(config.MongoUser, config.MongoPass)
 	return err
 }
-
+*/
 func getArtistFromCollection(id bson.ObjectId) (error, ArtistForm) {
 	err, artistForms := makeOrGetCollection("artistForms")
 
