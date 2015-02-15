@@ -51,6 +51,10 @@ func (f *Form) FullName() string {
 	return fmt.Sprintf("%s %s", f.FirstName, f.LastName)
 }
 
+func (f *Form) FullNameForFile() string {
+	return fmt.Sprintf("%s_%s", f.FirstName, f.LastName)
+}
+
 func (f *Form) SetSignature(sigString string) error {
 	rawSig := []byte(sigString)
 	var sig []map[string]int
