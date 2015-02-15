@@ -106,7 +106,10 @@ func writeArtistFormToDb(url string, sent bool, artistForm *ArtistForm) error {
 
 func makeOrGetCollection(coll string) (error, *mgo.Collection) {
 	config := getConf()
-	session, err := mgo.Dial(config.MongoUrl)
+
+	mongoUrl := fmt.Sprintf("mongodb://%s:%s/",
+		os.Getenv("OPENSHIFT_MONGODB_DB_HOST"), os.Getenv("OPENSHIFT_MONGODB_DB_PORT"))
+	session, err := mgo.Dial(mongoUrl)
 	session.DB(config.DbName).Login(config.MongoUser, config.MongoPass)
 	return err, session.DB(config.DbName).C(coll)
 }
