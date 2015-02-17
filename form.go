@@ -275,21 +275,6 @@ func getIndices(filter string, form map[string][]string) []int {
 	return indices
 }
 
-func randomHex() string {
-	var numbers = []rune("abcdef0123456789")
-	b := make([]rune, 32)
-	for i := range b {
-		b[i] = numbers[rand.Intn(len(numbers))]
-	}
-	return string(b)
-}
-
-func writeNewMetaData(record Record) {
-	record.SetId()
-	record.SetCreatedAt()
-	record.SetUpdatedAt()
-}
-
 func makeArtistForm(form map[string][]string) (error, *ArtistForm) {
 	artistForm := &ArtistForm{
 		Form: Form{
@@ -305,4 +290,19 @@ func makeArtistForm(form map[string][]string) (error, *ArtistForm) {
 	err := artistForm.SetSignature(form["output"][0])
 
 	return err, artistForm
+}
+
+func randomHex() string {
+	var numbers = []rune("abcdef0123456789")
+	b := make([]rune, 32)
+	for i := range b {
+		b[i] = numbers[rand.Intn(len(numbers))]
+	}
+	return string(b)
+}
+
+func writeNewMetaData(record Record) {
+	record.SetId()
+	record.SetCreatedAt()
+	record.SetUpdatedAt()
 }

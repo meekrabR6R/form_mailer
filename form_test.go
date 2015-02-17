@@ -84,6 +84,9 @@ func TestMakeArtistForm(t *testing.T) {
 	fullName := fmt.Sprintf("%s %s", item1["firstName"][0],
 		item1["lastName"][0])
 
+	fullNameForFile := fmt.Sprintf("%s_%s", item1["firstName"][0],
+		item1["lastName"][0])
+
 	if err != nil {
 		panic(err)
 		return
@@ -113,10 +116,22 @@ func TestMakeArtistForm(t *testing.T) {
 			"got", artistForm.FullName())
 	}
 
+	if artistForm.FullNameForFile() != fullNameForFile {
+		t.Error("For", artistForm,
+			"expected", fullNameForFile,
+			"got", artistForm.FullNameForFile())
+	}
+
 	if artistForm.EmailSent {
 		t.Error("For", artistForm,
 			"expected", false,
 			"got", artistForm.EmailSent)
+	}
+
+	if artistForm.Link != item1["downloadLink"][0] {
+		t.Error("For", artistForm,
+			"expected", item1["downloadLink"][0],
+			"got", artistForm.Link)
 	}
 
 	if artistForm.IsModel() {
@@ -129,11 +144,5 @@ func TestMakeArtistForm(t *testing.T) {
 		t.Error("For", artistForm,
 			"expected", true,
 			"got", artistForm.IsArtist())
-	}
-
-	if artistForm.Link != item1["downloadLink"][0] {
-		t.Error("For", artistForm,
-			"expected", item1["downloadLink"][0],
-			"got", artistForm.Link)
 	}
 }

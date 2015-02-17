@@ -97,15 +97,6 @@ func makeOrGetCollection(coll string) (error, *mgo.Collection) {
 	return err, session.DB(config.DbName).C(coll)
 }
 
-/*
-func setUpDb() error {
-	config := getConf()
-	fmt.Println(config.MongoPass)
-	session, err := mgo.Dial(config.MongoUrl)
-	session.DB(config.DbName).Login(config.MongoUser, config.MongoPass)
-	return err
-}
-*/
 func getArtistFromCollection(id bson.ObjectId) (error, ArtistForm) {
 	err, artistForms := makeOrGetCollection("artistForms")
 
@@ -156,11 +147,6 @@ func sendEmail(emailAddress string, sub string, bod string,
 		smtp.PlainAuth("", config.SenderEmail, config.SenderPass,
 			"smtp.gmail.com"))
 }
-
-//func sendErrorEmail(err error) {
-//	config := getConf()
-//	sendEmail(config.SenderEmail, "Error Report", err.Error(), false, Form{Email: "nmiano84@gmail.com"})
-//}
 
 /**
  * Wrapper function for generating pdf and sending email
