@@ -188,7 +188,3 @@ func TestMakeArtistForm(t *testing.T) {
 			"got", artistForm.IsArtist())
 	}
 }
-
-/**
- * Test Work struct
- **/

@@ -292,6 +292,7 @@ func makeArtistForm(form map[string][]string) (error, *ArtistForm) {
 	return err, artistForm
 }
 
+//Probably will never be used..
 func randomHex() string {
 	var numbers = []rune("abcdef0123456789")
 	b := make([]rune, 32)
