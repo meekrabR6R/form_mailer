@@ -43,45 +43,26 @@ func TestGetIndices(t *testing.T) {
 	var workIndices = getIndices("descOfWork", item1)
 
 	if len(workIndices) != 3 {
-		t.Error("For", item1,
+		t.Error("For", workIndices,
 			"expected", 3,
 			"got", len(workIndices))
 	}
 
 	if workIndices[0] != 1 {
-		t.Error("For", item1,
+		t.Error("For", workIndices,
 			"expected", 1,
 			"got", workIndices[0])
 	}
 
 	if workIndices[1] != 3 {
-		t.Error("For", item1,
+		t.Error("For", workIndices,
 			"expected", 3,
 			"got", workIndices[1])
 	}
 
 	if workIndices[2] != 5 {
-		t.Error("For", item1,
+		t.Error("For", workIndices,
 			"expected", 5,
 			"got", workIndices[2])
-	}
-}
-
-/**
- * Test for private function extraWorks
- */
-func TestExtractWorks(t *testing.T) {
-	var works = extractWorks(item1)
-
-	if len(works) != 3 {
-		t.Error("For", item1,
-			"expected", 3,
-			"got", len(works))
-	}
-
-	if works[0].Name != "Pic of Blob" {
-		t.Error("For", item1,
-			"expected", "Pic of Blob",
-			"got", works[0].Name)
 	}
 }

@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"gopkg.in/mgo.v2/bson"
 	"math/rand"
+	"sort"
 	"strconv"
 	"strings"
 	"time"
@@ -265,11 +266,12 @@ func getIndices(filter string, form map[string][]string) []int {
 			if err != nil {
 				panic(err)
 			}
-
+			fmt.Println(k)
 			indices[i] = j
 			i++
 		}
 	}
+	sort.Ints(indices)
 	return indices
 }
 
