@@ -134,6 +134,30 @@ func TestMakeArtistForm(t *testing.T) {
 			"got", artistForm.Link)
 	}
 
+	if len(artistForm.Works) != 3 {
+		t.Error("For", artistForm,
+			"expected", 3,
+			"got", len(artistForm.Works))
+	}
+
+	if artistForm.Works[0].Name != "Pic of Blob" {
+		t.Error("For", artistForm.Works[0],
+			"expected", "Pic of Blob",
+			"got", artistForm.Works[0].Name)
+	}
+
+	if artistForm.Works[1].Name != "Pic of Slob" {
+		t.Error("For", artistForm.Works[0],
+			"expected", "Pic of Slob",
+			"got", artistForm.Works[1].Name)
+	}
+
+	if artistForm.Works[2].Name != "Pic of Corn on the cob" {
+		t.Error("For", artistForm.Works[0],
+			"expected", "Pic of Corn on the cob",
+			"got", artistForm.Works[2].Name)
+	}
+
 	if artistForm.IsModel() {
 		t.Error("For", artistForm,
 			"expected", false,
@@ -146,3 +170,7 @@ func TestMakeArtistForm(t *testing.T) {
 			"got", artistForm.IsArtist())
 	}
 }
+
+/**
+ * Test Work struct
+ **/
