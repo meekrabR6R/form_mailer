@@ -158,6 +158,24 @@ func TestMakeArtistForm(t *testing.T) {
 			"got", artistForm.Works[2].Name)
 	}
 
+	if artistForm.Works[0].Photos[0].Name != "Photo of Blob" {
+		t.Error("For", artistForm.Works[0].Photos[0],
+			"expected", "Photo of Blob",
+			"got", artistForm.Works[0].Photos[0].Name)
+	}
+
+	if artistForm.Works[0].Photos[0].Models[0].FirstName != "Troy" {
+		t.Error("For", artistForm.Works[0].Photos[0].Models[0],
+			"expected", "Troy",
+			"got", artistForm.Works[0].Photos[0].Models[0].FirstName)
+	}
+
+	if artistForm.Works[0].Photos[0].Models[0].LastName != "McClure" {
+		t.Error("For", artistForm.Works[0].Photos[0].Models[0],
+			"expected", "McClure",
+			"got", artistForm.Works[0].Photos[0].Models[0].LastName)
+	}
+
 	if artistForm.IsModel() {
 		t.Error("For", artistForm,
 			"expected", false,
