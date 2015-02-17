@@ -266,7 +266,7 @@ func getIndices(filter string, form map[string][]string) []int {
 			if err != nil {
 				panic(err)
 			}
-			fmt.Println(k)
+
 			indices[i] = j
 			i++
 		}
@@ -288,4 +288,21 @@ func writeNewMetaData(record Record) {
 	record.SetId()
 	record.SetCreatedAt()
 	record.SetUpdatedAt()
+}
+
+func makeArtistForm(form map[string][]string) (error, *ArtistForm) {
+	artistForm := &ArtistForm{
+		Form: Form{
+			FirstName: form["firstName"][0],
+			LastName:  form["lastName"][0],
+			Email:     form["emailAddress"][0],
+			Link:      form["downloadLink"][0],
+		},
+	}
+
+	artistForm.SetWorks(form)
+	writeNewMetaData(artistForm)
+	err := artistForm.SetSignature(form["output"][0])
+
+	return err, artistForm
 }

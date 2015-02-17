@@ -79,23 +79,6 @@ func makeAPDF(form BaseForm) {
 	}
 }
 
-func makeArtistForm(form map[string][]string) (error, *ArtistForm) {
-	artistForm := &ArtistForm{
-		Form: Form{
-			FirstName: form["firstName"][0],
-			LastName:  form["lastName"][0],
-			Email:     form["emailAddress"][0],
-			Link:      form["downloadLink"][0],
-		},
-	}
-
-	artistForm.SetWorks(form)
-	writeNewMetaData(artistForm)
-	err := artistForm.SetSignature(form["output"][0])
-
-	return err, artistForm
-}
-
 func writeArtistFormToDb(url string, sent bool, artistForm *ArtistForm) error {
 	artistForm.EmailSent = sent
 	err, artistFormsCollection := makeOrGetCollection("artistForms")

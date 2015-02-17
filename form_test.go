@@ -1,18 +1,26 @@
 package main
 
 import (
+	"fmt"
 	"testing"
 )
 
 var item1 = map[string][]string{
-	"name":        []string{"Nick"},
-	"email":       []string{"freddy@aol.com"},
-	"descOfWork1": []string{"Blob"},
-	"descOfWork3": []string{"Slob"},
-	"descOfWork5": []string{"Corn on the cob"},
-	"nameOfWork1": []string{"Pic of Blob"},
-	"nameOfWork3": []string{"Pic of Slob"},
-	"nameOfWork5": []string{"Pic of Corn on the cob"},
+	"firstName":           []string{"Nick"},
+	"lastName":            []string{"Mujanjo"},
+	"emailAddress":        []string{"freddy@aol.com"},
+	"downloadLink":        []string{"http://www.dropbox.com/myawesomestuff"},
+	"output":              []string{"[{ \"lx\" : 122, \"ly\" : 31, \"mx\" : 122, \"my\" : 30 }]"},
+	"descOfWork1":         []string{"Blob"},
+	"descOfWork3":         []string{"Slob"},
+	"descOfWork5":         []string{"Corn on the cob"},
+	"nameOfWork1":         []string{"Pic of Blob"},
+	"nameOfWork3":         []string{"Pic of Slob"},
+	"nameOfWork5":         []string{"Pic of Corn on the cob"},
+	"nameOfPhoto10":       []string{"Photo of Blob"},
+	"firstNameOfModel100": []string{"Troy"},
+	"lastNameOfModel100":  []string{"McClure"},
+	"emailOfModel100":     []string{"troy@mcclure.com"},
 }
 
 /**
@@ -64,5 +72,68 @@ func TestGetIndices(t *testing.T) {
 		t.Error("For", workIndices,
 			"expected", 5,
 			"got", workIndices[2])
+	}
+}
+
+/**
+ * Test ArtistForm factory helper
+ */
+func TestMakeArtistForm(t *testing.T) {
+	err, artistForm := makeArtistForm(item1)
+
+	fullName := fmt.Sprintf("%s %s", item1["firstName"][0],
+		item1["lastName"][0])
+
+	if err != nil {
+		panic(err)
+		return
+	}
+
+	if artistForm.Email != item1["emailAddress"][0] {
+		t.Error("For", artistForm,
+			"expected", item1["emailAddress"][0],
+			"got", artistForm.Email)
+	}
+
+	if artistForm.FirstName != item1["firstName"][0] {
+		t.Error("For", artistForm,
+			"expected", item1["firstName"][0],
+			"got", artistForm.Email)
+	}
+
+	if artistForm.LastName != item1["lastName"][0] {
+		t.Error("For", artistForm,
+			"expected", item1["emailAddress"][0],
+			"got", artistForm.Email)
+	}
+
+	if artistForm.FullName() != fullName {
+		t.Error("For", artistForm,
+			"expected", fullName,
+			"got", artistForm.FullName())
+	}
+
+	if artistForm.EmailSent {
+		t.Error("For", artistForm,
+			"expected", false,
+			"got", artistForm.EmailSent)
+	}
+
+	if artistForm.IsModel() {
+		t.Error("For", artistForm,
+			"expected", false,
+			"got", artistForm.IsModel())
+	}
+
+	if !artistForm.IsArtist() {
+		t.Error("For", artistForm,
+			"expected", true,
+			"got", artistForm.IsArtist())
+	}
+
+	if artistForm.Link != item1["downloadLink"][0] {
+		t.Error("For", artistForm,
+			"expected", item1["downloadLink"][0],
+			"got", artistForm.Link)
 	}
 }
