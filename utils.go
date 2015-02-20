@@ -11,6 +11,7 @@ import (
 	"net/textproto"
 	"os"
 	"strings"
+	"time"
 )
 
 /**
@@ -64,7 +65,14 @@ func makeAPDF(form BaseForm) {
 	body := fmt.Sprintf(content, strings.ToUpper(form.FullName()),
 		strings.ToUpper(form.FullName()))
 
-	pdfBody := fmt.Sprintf("%s\n\n%s", title, body)
+	//time formatting
+	const layout = "Jan 2, 2006 at 3:04pm (MST)"
+	t := time.Now()
+	//hacky formtting... but i'm so tired..
+	pdfBody := fmt.Sprintf("%s\n\n%s\n\n\nDate: %s\n\nSignature:",
+		title,
+		body,
+		t.Format(layout))
 
 	pdf := gofpdf.New("P", "mm", "A4", "../font")
 	pdf.AddPage()
@@ -74,10 +82,10 @@ func makeAPDF(form BaseForm) {
 	//write sig
 	for i := 0; i < len(form.GetSignature()); i++ {
 		dot := form.GetSignature()[i]
-		pdf.Line((dot["lx"]+120)/4,
-			(dot["ly"]+750)/4,
-			(dot["mx"]+120)/4,
-			(dot["my"]+750)/4)
+		pdf.Line((dot["lx"]+100)/4,
+			(dot["ly"]+720)/4,
+			(dot["mx"]+100)/4,
+			(dot["my"]+720)/4)
 	}
 
 	err := pdf.OutputFileAndClose(
