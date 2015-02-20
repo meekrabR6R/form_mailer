@@ -71,6 +71,15 @@ func makeAPDF(form BaseForm) {
 	pdf.SetFont("Times", "B", 10)
 	pdf.MultiCell(185, 5, pdfBody, "", "", false)
 
+	//write sig
+	for i := 0; i < len(form.GetSignature()); i++ {
+		dot := form.GetSignature()[i]
+		pdf.Line((dot["lx"]+120)/4,
+			(dot["ly"]+750)/4,
+			(dot["mx"]+120)/4,
+			(dot["my"]+750)/4)
+	}
+
 	err := pdf.OutputFileAndClose(
 		fmt.Sprintf("%s_release.pdf", form.FullNameForFile()))
 

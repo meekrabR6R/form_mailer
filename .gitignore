@@ -3,3 +3,4 @@ gin-bin
 *.pdf
 config.json
 openshift_config.json
+scratch

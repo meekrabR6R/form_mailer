@@ -21,6 +21,7 @@ type BaseForm interface {
 	FullName() string
 	FullNameForFile() string
 	SetSignature(string) error
+	GetSignature() []map[string]float64
 	IsArtist() bool
 	IsModel() bool
 }
@@ -31,7 +32,7 @@ type Form struct {
 	LastName  string
 	Email     string
 	Link      string
-	Sig       []map[string]int
+	Sig       []map[string]float64
 	EmailSent bool
 	CreatedAt time.Time
 	UpdatedAt time.Time
@@ -59,10 +60,14 @@ func (f *Form) FullNameForFile() string {
 
 func (f *Form) SetSignature(sigString string) error {
 	rawSig := []byte(sigString)
-	var sig []map[string]int
+	var sig []map[string]float64
 	err := json.Unmarshal(rawSig, &sig)
 	f.Sig = sig
 	return err
+}
+
+func (f *Form) GetSignature() []map[string]float64 {
+	return f.Sig
 }
 
 type ArtistForm struct {
