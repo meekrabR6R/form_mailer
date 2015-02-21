@@ -4,7 +4,7 @@ var workSnippet = function(index) {
 	     <button id=\"removeWork" +index+ "\" type=\"button\" class=\"close\" aria-label=\"Close\"><span aria-hidden=\"true\">&times;</span></button>\
          <div class=\"form-group\">\
            <label for=\"nameOfWork" +index+ "\">Name of Work</label>\
-	       <input type=\"text\" class=\"form-control\" data-parsley-required=\"true\" name=\"nameOfWork" +index+"\" id=\"nameOfWork" +index+ "\" placeholder=\"Name of Work\">\
+	       <input type=\"text\" class=\"form-control work-name\" data-parsley-required=\"true\" name=\"nameOfWork" +index+"\" id=\"nameOfWork" +index+ "\" placeholder=\"Name of Work\">\
          </div>\
          <div class=\"form-group\">\
            <label for=\"descOfWork\">Description of Work</label>\
@@ -50,6 +50,11 @@ var modelSnippet = function(workIndex, photoIndex, modelIndex) {
 
 function setFormClickListeners() {
 	var workIndex = 0;
+
+	$("#view-release-btn").click(function() {
+		makeAndShowReleaseForm()
+	})
+	
 	$("#add-work-btn").click(function() {
 		var photoIndex = 0;
 		var tempWorkIndex = workIndex;
@@ -94,6 +99,41 @@ function setFormClickListeners() {
 		});		
 		workIndex++;			
 	});
+}
+
+function makeAndShowReleaseForm() {
+	var releaseString = $("#hidden-release-text").val();
+	var firstName     = $("#firstName").val();
+	var lastName      = $("#lastName").val();
+	var fullName      = (firstName + " " + lastName).toUpperCase();
+	var works         = getItemsStringByClass(".work-name")
+	var newString = vsprintf(releaseString, [fullName, works]);
+
+	$("#release-text").text(newString)
+	$("#release-modal").modal();
+}
+
+function getItemsStringByClass(className) {
+	var works = "";
+	var count = getItemCountByClass(className);
+	var index = 0;
+	$(className).each(function(){
+  		if (index < count - 1 || count == 1) {
+  			works += $(this).val().toUpperCase() + ", ";
+  		} else if (index == count - 1) {
+  			works += "and " + $(this).val().toUpperCase() + ",";
+  		}
+  		index++;
+	});
+	return works;
+}
+
+function getItemCountByClass(className) {
+	var count = 0;
+	$(className).each(function() {
+		count++;
+	});
+	return count;
 }
 
 $(document).ready(function() {

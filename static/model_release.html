@@ -12,6 +12,7 @@
     <script src="{{.Conf.Url}}/lib/jquery.signaturepad.min.js"></script>
     <script src="{{.Conf.Url}}/lib/parsley.min.js"></script>
     <script src="{{.Conf.Url}}/lib/json2.min.js"></script>
+    <script src="{{.Conf.Url}}/lib/sprintf.js"></script>
 
   </head>
   <body>
@@ -40,11 +41,13 @@
             <input type="email" class="form-control" data-parsley-required="true" data-parsley-type="email" id="emailAddressConfirmation" placeholder="Email Confirmation">
           </div> -->
         </div>
-          <p class="drawItDesc">Draw your signature</p>
-          <ul class="sigNav">
-            <li class="drawIt"><a href="#draw-it" class="current">Draw It</a></li>
-            <li class="clearButton"><a href="#clear">Clear</a></li>
-          </ul>
+        <button id="view-release-btn" type="Button" class="btn btn-warning">View Release</button>
+
+        <p class="drawItDesc">Draw your signature</p>
+        <ul class="sigNav">
+          <li class="drawIt"><a href="#draw-it" class="current">Draw It</a></li>
+          <li class="clearButton"><a href="#clear">Clear</a></li>
+        </ul>
         <div class="form-group sig sigWrapper">
           <div class=typed></div>
           <canvas class=pad width=500 height=85></canvas>
@@ -53,6 +56,24 @@
         <button type="submit" class="btn btn-default">Submit</button>
       </form>
     </div>
+    <!-- Release Modal -->
+    <div id="release-modal" class="modal fade">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title">PERJUS Model Release</h4>
+          </div>
+          <div class="modal-body">
+            <input type=hidden name="hidden-release-text" id="hidden-release-text" value="{{.Conf.ModelBody}}">
+            <p id="release-text"></p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          </div>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
     <script src="{{.Conf.Url}}/helper.js"></script>
   </body>
 </html>

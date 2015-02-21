@@ -12,6 +12,7 @@
     <script src="lib/jquery.signaturepad.min.js"></script>
     <script src="lib/parsley.min.js"></script>
     <script src="lib/json2.min.js"></script>
+    <script src="lib/sprintf.js"></script>
 
   </head>
   <body>
@@ -42,7 +43,7 @@
           </div>
         </div>
         <div id="add-work-btn-wrapper" class="form-group">
-          <p class="work-warning bg-warning">Work titles must match corresponding files in download link.</p>
+          <h4 class="work-warning bg-warning">Work titles must match corresponding files in download link.</h4>
           <button id="add-work-btn" type="Button" class="btn btn-default">+ Add Work</button>
         </div>
         <button id="view-release-btn" type="Button" class="btn btn-warning">View Release</button>
@@ -59,6 +60,24 @@
         <button type="submit" class="btn btn-default">Submit</button>
       </form>
     </div>
+    <!-- Release Modal -->
+    <div id="release-modal" class="modal fade">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title">PERJUS Artist Release</h4>
+          </div>
+          <div class="modal-body">
+            <input type=hidden name="hidden-release-text" id="hidden-release-text" value="{{.Conf.ArtistBody}}">
+            <p id="release-text"></p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          </div>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
     <script src="helper.js"></script>
   </body>
 </html>

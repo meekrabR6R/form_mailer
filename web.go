@@ -104,6 +104,11 @@ func ThanksHandler(w http.ResponseWriter, req *http.Request) {
 	t.Execute(w, new(interface{}))
 }
 
+func IndexHandler(w http.ResponseWriter, req *http.Request) {
+	t, _ := template.ParseFiles("static/index.html")
+	t.Execute(w, Content{Conf: getConf()})
+}
+
 func errorHandler(w http.ResponseWriter, r *http.Request, err error) {
 	w.WriteHeader(500)
 	errString := fmt.Sprint("Something broke.. :-/ womp womp:\n %s ")
@@ -115,6 +120,7 @@ func main() {
 	flag.Parse()
 
 	router := mux.NewRouter()
+	router.HandleFunc("/", IndexHandler)
 	router.HandleFunc("/work", WorkFormHandler)
 	router.HandleFunc("/model", ModelFormHandler)
 	router.HandleFunc("/thanks", ThanksHandler)
