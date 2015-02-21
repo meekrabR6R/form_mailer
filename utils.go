@@ -17,7 +17,6 @@ import (
 /**
  * Global config
  */
-
 type Config struct {
 	Url               string
 	MongoUrl          string
@@ -26,6 +25,7 @@ type Config struct {
 	DbName            string
 	SenderEmail       string
 	SenderPass        string
+	AdminBody         string
 	ArtistEmailBody   string
 	ArtistTitle       string
 	ArtistBody        string
@@ -194,7 +194,7 @@ func sendAdminEmail(form BaseForm) (error, bool) {
 		fmt.Sprintf("%s - Signed Release Forms - Issue %d",
 			strings.ToUpper(form.FullName()),
 			2), //temp holder for version
-		"basic info",
+		fmt.Sprintf(config.AdminBody, form.FullName()),
 		true,
 		form)
 	sent := true
