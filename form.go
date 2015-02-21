@@ -176,7 +176,7 @@ func (m *ModelForm) IsModel() bool {
 }
 
 func (m *ModelForm) GetDataAsString() string {
-	return "todo"
+	return ""
 }
 
 type Work struct {

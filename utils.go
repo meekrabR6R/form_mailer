@@ -50,7 +50,15 @@ func getConf() (conf *Config) {
 	return
 }
 
-func makeAPDF(form BaseForm) {
+func makeModelPDF(form BaseForm) {
+	makeAPDF(form, 100, 520)
+}
+
+func makeArtistPDF(form BaseForm) {
+	makeAPDF(form, 100, 720)
+}
+
+func makeAPDF(form BaseForm, x float64, y float64) {
 	var config = getConf()
 	var title string
 	var content string
@@ -63,8 +71,13 @@ func makeAPDF(form BaseForm) {
 		content = config.ModelBody
 	}
 
-	body := fmt.Sprintf(content, strings.ToUpper(form.FullName()),
-		form.GetDataAsString())
+	var body string
+	if len(form.GetDataAsString()) > 0 {
+		body = fmt.Sprintf(content, strings.ToUpper(form.FullName()),
+			form.GetDataAsString())
+	} else {
+		body = fmt.Sprintf(content, strings.ToUpper(form.FullName()))
+	}
 
 	//time formatting
 	const layout = "Jan 2, 2006 at 3:04pm (MST)"
@@ -83,10 +96,10 @@ func makeAPDF(form BaseForm) {
 	//write sig
 	for i := 0; i < len(form.GetSignature()); i++ {
 		dot := form.GetSignature()[i]
-		pdf.Line((dot["lx"]+100)/4,
-			(dot["ly"]+720)/4,
-			(dot["mx"]+100)/4,
-			(dot["my"]+720)/4)
+		pdf.Line((dot["lx"]+x)/4,
+			(dot["ly"]+y)/4,
+			(dot["mx"]+x)/4,
+			(dot["my"]+y)/4)
 	}
 
 	err := pdf.OutputFileAndClose(
@@ -172,7 +185,7 @@ func sendEmail(emailAddress string, sub string, bod string,
  */
 func sendArtistEmail(artistForm *ArtistForm) (error, bool) {
 	config := getConf()
-	makeAPDF(artistForm)
+	makeArtistPDF(artistForm)
 	err := sendEmail(artistForm.Form.Email,
 		"PERJUS Magazine release form",
 		config.ArtistEmailBody,
@@ -190,6 +203,7 @@ func sendArtistEmail(artistForm *ArtistForm) (error, bool) {
 
 func sendAdminEmailForArtist(form *ArtistForm) (error, bool) {
 	config := getConf()
+	makeArtistPDF(form)
 	return sendAdminEmail(form,
 		fmt.Sprintf(config.AdminBodyForArtist,
 			form.FullName(),
@@ -198,6 +212,7 @@ func sendAdminEmailForArtist(form *ArtistForm) (error, bool) {
 
 func sendAdminEmailForModel(form *ModelForm) (error, bool) {
 	config := getConf()
+	makeModelPDF(form)
 	return sendAdminEmail(form,
 		fmt.Sprintf(config.AdminBodyForModel,
 			form.FullName()))
@@ -205,7 +220,6 @@ func sendAdminEmailForModel(form *ModelForm) (error, bool) {
 
 func sendAdminEmail(form BaseForm, body string) (error, bool) {
 	config := getConf()
-	makeAPDF(form)
 	err := sendEmail(config.SenderEmail,
 		fmt.Sprintf("%s - Signed Release Forms - Issue %d",
 			strings.ToUpper(form.FullName()),
@@ -245,7 +259,7 @@ func sendModelEmailWithLink(artistForm *ArtistForm, modelForm *ModelForm) (error
 
 func sendModelEmailWithForm(modelForm *ModelForm) (error, bool) {
 	config := getConf()
-	makeAPDF(modelForm)
+	makeModelPDF(modelForm)
 	err := sendEmail(modelForm.Form.Email,
 		"PERJUS Magazine release form",
 		config.ArtistEmailBody,
