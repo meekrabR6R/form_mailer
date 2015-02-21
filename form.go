@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bytes"
 	"encoding/json"
 	"fmt"
 	"gopkg.in/mgo.v2/bson"
@@ -22,6 +23,7 @@ type BaseForm interface {
 	FullNameForFile() string
 	SetSignature(string) error
 	GetSignature() []map[string]float64
+	GetDataAsString() string
 	IsArtist() bool
 	IsModel() bool
 }
@@ -81,6 +83,21 @@ func (a *ArtistForm) IsArtist() bool {
 
 func (a *ArtistForm) IsModel() bool {
 	return false
+}
+
+func (a *ArtistForm) GetDataAsString() string {
+	var worksBuffer bytes.Buffer
+
+	index := 0
+	for _, work := range a.Works {
+		if index < (len(a.Works) - 1) {
+			worksBuffer.WriteString(strings.ToUpper(work.Name) + ", ")
+		} else {
+			worksBuffer.WriteString("and " + strings.ToUpper(work.Name) + ",")
+		}
+		index++
+	}
+	return worksBuffer.String()
 }
 
 func (a *ArtistForm) SetModelSigById(id bson.ObjectId, sig string) {
@@ -156,6 +173,10 @@ func (m *ModelForm) IsArtist() bool {
 
 func (m *ModelForm) IsModel() bool {
 	return true
+}
+
+func (m *ModelForm) GetDataAsString() string {
+	return "todo"
 }
 
 type Work struct {

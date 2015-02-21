@@ -63,7 +63,7 @@ func makeAPDF(form BaseForm) {
 	}
 
 	body := fmt.Sprintf(content, strings.ToUpper(form.FullName()),
-		strings.ToUpper(form.FullName()))
+		form.GetDataAsString())
 
 	//time formatting
 	const layout = "Jan 2, 2006 at 3:04pm (MST)"
