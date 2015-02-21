@@ -31,7 +31,7 @@ func WorkFormHandler(w http.ResponseWriter, req *http.Request) {
 			//panic(err2)
 			errorHandler(w, req, err2)
 		}
-		sendAdminEmail(artistForm)
+		sendAdminEmailForArtist(artistForm)
 		sendAllModelEmails(artistForm)
 
 		writeArtistFormToDb(config.MongoUrl, sent, artistForm)
@@ -67,7 +67,7 @@ func ModelFormHandler(w http.ResponseWriter, req *http.Request) {
 		model := artist.ModelById(modelId)
 
 		//TODO Store Admin Sent status
-		err2, adminSent := sendAdminEmail(model)
+		err2, adminSent := sendAdminEmailForModel(model)
 		if err2 != nil {
 			fmt.Println(adminSent)
 			//panic(err2)

@@ -90,7 +90,7 @@ func (a *ArtistForm) GetDataAsString() string {
 
 	index := 0
 	for _, work := range a.Works {
-		if index < (len(a.Works) - 1) {
+		if index < (len(a.Works)-1) || len(a.Works) == 1 {
 			worksBuffer.WriteString(strings.ToUpper(work.Name) + ", ")
 		} else {
 			worksBuffer.WriteString("and " + strings.ToUpper(work.Name) + ",")

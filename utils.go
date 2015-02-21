@@ -18,20 +18,21 @@ import (
  * Global config
  */
 type Config struct {
-	Url               string
-	MongoUrl          string
-	MongoUser         string
-	MongoPass         string
-	DbName            string
-	SenderEmail       string
-	SenderPass        string
-	AdminBody         string
-	ArtistEmailBody   string
-	ArtistTitle       string
-	ArtistBody        string
-	ModelEmailBodyOne string
-	ModelTitle        string
-	ModelBody         string
+	Url                string
+	MongoUrl           string
+	MongoUser          string
+	MongoPass          string
+	DbName             string
+	SenderEmail        string
+	SenderPass         string
+	AdminBodyForArtist string
+	AdminBodyForModel  string
+	ArtistEmailBody    string
+	ArtistTitle        string
+	ArtistBody         string
+	ModelEmailBodyOne  string
+	ModelTitle         string
+	ModelBody          string
 }
 
 type Content struct {
@@ -187,14 +188,29 @@ func sendArtistEmail(artistForm *ArtistForm) (error, bool) {
 	return err, sent
 }
 
-func sendAdminEmail(form BaseForm) (error, bool) {
+func sendAdminEmailForArtist(form *ArtistForm) (error, bool) {
+	config := getConf()
+	return sendAdminEmail(form,
+		fmt.Sprintf(config.AdminBodyForArtist,
+			form.FullName(),
+			form.Link))
+}
+
+func sendAdminEmailForModel(form *ModelForm) (error, bool) {
+	config := getConf()
+	return sendAdminEmail(form,
+		fmt.Sprintf(config.AdminBodyForModel,
+			form.FullName()))
+}
+
+func sendAdminEmail(form BaseForm, body string) (error, bool) {
 	config := getConf()
 	makeAPDF(form)
 	err := sendEmail(config.SenderEmail,
 		fmt.Sprintf("%s - Signed Release Forms - Issue %d",
 			strings.ToUpper(form.FullName()),
 			2), //temp holder for version
-		fmt.Sprintf(config.AdminBody, form.FullName()),
+		body,
 		true,
 		form)
 	sent := true
