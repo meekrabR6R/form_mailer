@@ -51,3 +51,8 @@ textarea.parsley-error {
 .parsley-errors-list.filled {
     opacity: 1;
 }
+
+.work-warning {
+    padding: 20px;
+    text-align: center;
+}
