@@ -10,7 +10,7 @@ var workSnippet = function(index) {
            <label for=\"descOfWork\">Description of Work</label>\
 	       <input type=\"text\" class=\"form-control\" data-parsley-required=\"true\" name=\"descOfWork" +index+"\" id=\"descOfWork" +index+ "\" placeholder=\"Description of Work\">\
          </div>\
-         <button id=\"add-photo-btn" +index+ "\" type=\"Button\" class=\"btn btn-default\">+ Add Photo</button>\
+         <button id=\"add-photo-btn" +index+ "\" type=\"Button\" class=\"btn btn-default\">+ Add Content</button>\
        </div>\
      </div>";
 }
