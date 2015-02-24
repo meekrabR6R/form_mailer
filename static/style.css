@@ -16,7 +16,11 @@
 }
 
 .pad {
-	padding-top   : 10px;
+	padding-top   : 10px
+}
+
+.sig {
+    width: 330px
 }
 
 input.parsley-success,
