@@ -37,12 +37,13 @@
             <input type="email" class="form-control" data-parsley-required="true" data-parsley-type="email" id="emailAddressConfirmation" placeholder="Email Confirmation">
           </div> -->
           <div class="form-group">
-            <label for="downloadLink">Download Link (Dropbox, etc.)</label>
+            <label for="downloadLink">Download Link (Dropbox, etc.)</label><br>
+            <label>(Photos must be high res, minimum of 200dpi)</label>
             <input type="url" class="form-control" data-parsley-required="true" data-parsley-type="url" name="downloadLink" id="downloadLink" placeholder="Download Link">
           </div>
         </div>
         <div id="add-work-btn-wrapper" class="form-group">
-          <h4 class="work-warning bg-warning">Work titles must match corresponding files in download link.</h4>
+          <h4 class="work-warning bg-warning">Work titles must match corresponding files in download link.<br>Work that is not accounted for in this section will not be accepted as a valid submission</h4>
           <button id="add-work-btn" type="Button" class="btn btn-default">+ Add Work</button>
         </div>
         <button id="view-release-btn" type="Button" class="btn btn-warning">View Release</button>
