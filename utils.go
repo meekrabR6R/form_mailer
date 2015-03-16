@@ -1,10 +1,10 @@
 package main
 
 import (
-	"code.google.com/p/gofpdf"
 	"encoding/json"
 	"fmt"
 	"github.com/jordan-wright/email"
+	"github.com/jung-kurt/gofpdf"
 	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
 	"net/smtp"
