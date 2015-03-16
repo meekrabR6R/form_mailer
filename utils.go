@@ -106,7 +106,7 @@ func makeAPDF(form BaseForm, x float64, y float64) {
 		fmt.Sprintf("%s_release.pdf", form.FullNameForFile()))
 
 	if err != nil {
-		panic(err)
+		//panic(err)
 	}
 }
 
@@ -132,7 +132,7 @@ func getArtistFromCollection(id bson.ObjectId) (error, ArtistForm) {
 	err, artistForms := makeOrGetCollection("artistForms")
 
 	if err != nil {
-		panic(err)
+		//panic(err)
 	}
 
 	artistForm := ArtistForm{}
@@ -292,7 +292,7 @@ func sendAllModelEmails(artistForm *ArtistForm) {
 					modelErr, snt := sendModelEmailWithLink(artistForm,
 						&artistForm.Works[iIdx].Photos[jIdx].Models[kIdx])
 					if modelErr != nil {
-						panic(modelErr)
+						//panic(modelErr)
 					}
 
 					artistForm.Works[iIdx].Photos[jIdx].Models[kIdx].EmailSent = snt

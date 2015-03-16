@@ -22,7 +22,7 @@ func WorkFormHandler(w http.ResponseWriter, req *http.Request) {
 
 	err1, artistForm := makeArtistForm(form)
 	if err1 != nil {
-		panic(err1)
+		//panic(err1)
 	}
 
 	go func() {

@@ -290,7 +290,7 @@ func getIndices(filter string, form map[string][]string) []int {
 		if strings.Contains(k, filter) {
 			j, err := strconv.Atoi(k[len(k)-1:])
 			if err != nil {
-				panic(err)
+				//panic(err)
 			}
 
 			indices[i] = j
