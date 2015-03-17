@@ -124,7 +124,9 @@ func makeOrGetCollection(coll string) (error, *mgo.Collection) {
 	mongoUrl := fmt.Sprintf("mongodb://%s:%s/",
 		os.Getenv("OPENSHIFT_MONGODB_DB_HOST"), os.Getenv("OPENSHIFT_MONGODB_DB_PORT"))
 	session, err := mgo.Dial(mongoUrl)
-	session.DB(config.DbName).Login(config.MongoUser, config.MongoPass)
+	if err == nil {
+		session.DB(config.DbName).Login(config.MongoUser, config.MongoPass)
+	}
 	return err, session.DB(config.DbName).C(coll)
 }
 

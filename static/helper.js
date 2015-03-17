@@ -59,7 +59,7 @@ function setFormClickListeners() {
 		var photoIndex = 0;
 		var tempWorkIndex = workIndex;
 
-		$("#add-work-btn-wrapper").after(workSnippet(workIndex));
+		$("#wrk-wrn").after(workSnippet(workIndex));
 		$("#removeWork" + tempWorkIndex.toString()).click(function() {
 			$("#outterWorkWrapper" + tempWorkIndex.toString()).remove();
 		});
@@ -99,6 +99,7 @@ function setFormClickListeners() {
 		});		
 		workIndex++;			
 	});
+	$("#add-work-btn").click();
 }
 
 function makeAndShowReleaseForm() {
