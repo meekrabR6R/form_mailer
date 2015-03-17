@@ -156,6 +156,7 @@ func (a *ArtistForm) SetWorks(form map[string][]string) {
 		a.Works[i] = Work{
 			Name:        form[fmt.Sprintf("nameOfWork%d", e)][0],
 			Description: form[fmt.Sprintf("descOfWork%d", e)][0],
+			Extra:       form[fmt.Sprintf("extraForWork%d", e)][0],
 		}
 
 		a.Works[i].SetPhotos(form, e)
@@ -183,6 +184,7 @@ type Work struct {
 	Id          bson.ObjectId `bson:"_id"`
 	Name        string
 	Description string
+	Extra       string
 	Photos      []Photo `bson:"photos"`
 	CreatedAt   time.Time
 	UpdatedAt   time.Time

@@ -7,8 +7,12 @@ var workSnippet = function(index) {
 	       <input type=\"text\" class=\"form-control work-name\" data-parsley-required=\"true\" name=\"nameOfWork" +index+"\" id=\"nameOfWork" +index+ "\" placeholder=\"Name of Work\">\
          </div>\
          <div class=\"form-group\">\
-           <label for=\"descOfWork\">Description (optional)</label>\
+           <label for=\"descOfWork" +index+ "\">Description (optional)</label>\
 	       <input type=\"text\" class=\"form-control\" data-parsley-required=\"true\" name=\"descOfWork" +index+"\" id=\"descOfWork" +index+ "\" placeholder=\"Description of Work\">\
+         </div>\
+         <div class=\"form-group\">\
+         	<label for=\"extraForWork" +index+ "\">Additional notes (optional) ie: Location, Date, HMU, Creative Direction, etc.</label>\
+         	<textarea class=\"form-control\" name=\"extraForWork" +index+ "\" id=\"extraForWork" +index+ "\" placeholder=\"Notes...\"></textarea>\
          </div>\
          <button id=\"add-photo-btn" +index+ "\" type=\"Button\" class=\"btn btn-default\">+ Add File</button>\
        </div>\
