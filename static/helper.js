@@ -3,14 +3,14 @@ var workSnippet = function(index) {
         <div id=\"workWrapper" +index+ "\">\
 	     <button id=\"removeWork" +index+ "\" type=\"button\" class=\"close\" aria-label=\"Close\"><span aria-hidden=\"true\">&times;</span></button>\
          <div class=\"form-group\">\
-           <label for=\"nameOfWork" +index+ "\">Name of Work</label>\
+           <label for=\"nameOfWork" +index+ "\">Name of project being submitted</label>\
 	       <input type=\"text\" class=\"form-control work-name\" data-parsley-required=\"true\" name=\"nameOfWork" +index+"\" id=\"nameOfWork" +index+ "\" placeholder=\"Name of Work\">\
          </div>\
          <div class=\"form-group\">\
-           <label for=\"descOfWork\">Description of Work</label>\
+           <label for=\"descOfWork\">Description (optional)</label>\
 	       <input type=\"text\" class=\"form-control\" data-parsley-required=\"true\" name=\"descOfWork" +index+"\" id=\"descOfWork" +index+ "\" placeholder=\"Description of Work\">\
          </div>\
-         <button id=\"add-photo-btn" +index+ "\" type=\"Button\" class=\"btn btn-default\">+ Add Content</button>\
+         <button id=\"add-photo-btn" +index+ "\" type=\"Button\" class=\"btn btn-default\">+ Add File</button>\
        </div>\
      </div>";
 }
@@ -19,12 +19,14 @@ var photoSnippet = function(workIndex, photoIndex) {
 	var index = workIndex.toString()+""+photoIndex.toString();
 	return "<div id=\"outterPhotoWrapper" +index+ "\" class=\"added\">\
 	   <div id=\"photoWrapper" +index+ "\" class=\"wrapper form-inline\">\
-	   	 <p class=\"text-warning\">If no model is in the photo, please leave 'Model Name' cell blank.</p>\
 	     <div class=\"form-group\">\
-	       <label for=\"nameOfPhoto" +index+ "\">Name of Photo</label>\
+	       <label for=\"nameOfPhoto" +index+ "\">File Name</label>\
 	       <input type=\"text\" class=\"form-control\" data-parsley-required=\"true\" name=\"nameOfPhoto" +index+ "\"id=\"nameOfPhoto" +index+ "\" placeholder=\"Name of Photo\">\
 	     </div>\
-         <button id=\"add-model-btn" +index+ "\" type=\"Button\" class=\"btn btn-default\">+ Add Model</button>\
+	     <div class=\"form-group\">\
+         	<label for=\"add-model-btn" +index+ "\" class=\"wrapper form-inline text-warning\">If applicable:</label>\
+         	<button id=\"add-model-btn" +index+ "\" type=\"Button\" class=\"btn btn-default\">+ Add Model</button>\
+	     </div>\
 	     <button id=\"removePhoto" +index+ "\" type=\"button\" class=\"close\" aria-label=\"Close\"><span aria-hidden=\"true\">&times;</span></button>\
 	   </div>";
 }
