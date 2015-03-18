@@ -2,7 +2,7 @@
 	"url": "https://perjusmagrelease-meekrab.rhcloud.com/",
 	"mongourl": "mongodb://$OPENSHIFT_MONGODB_DB_HOST:$OPENSHIFT_MONGODB_DB_PORT/",
 	"mongouser": "admin",
-	"mongopass": "TRyF94SslFzk",
+	"mongopass": "ibL8Dltas1Me",
 	"dbname": "perjusmagrelease",
 	"senderemail": "perjusmag@gmail.com",
 	"senderpass": "ontheupbeat",
