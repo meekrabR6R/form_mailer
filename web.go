@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"flag"
 	"fmt"
 	"github.com/gorilla/mux"
@@ -99,6 +100,27 @@ func ModelLandingHandler(w http.ResponseWriter, req *http.Request) {
 	t.Execute(w, makeContent(id, artistForm))
 }
 
+func ModelReleaseTextHandler(w http.ResponseWriter, req *http.Request) {
+	vars := mux.Vars(req)
+	id := bson.ObjectIdHex(vars["id"])
+
+	err, artistForms := makeOrGetCollection("artistForms")
+	if err != nil {
+		errorHandler(w, req, err)
+		//panic(err1)
+	}
+
+	artistForm := ArtistForm{}
+	query := bson.M{"works.photos.models._id": id}
+
+	_ = artistForms.Find(query).One(&artistForm)
+	model := artistForm.ModelById(id)
+
+	var m = make(map[string]string)
+	m["text"] = makeReleaseStringForModel(model)
+	json.NewEncoder(w).Encode(m)
+}
+
 func ThanksHandler(w http.ResponseWriter, req *http.Request) {
 	t, _ := template.ParseFiles("static/release_landing_page.html")
 	t.Execute(w, new(interface{}))
@@ -126,6 +148,7 @@ func main() {
 	router.HandleFunc("/model", ModelFormHandler)
 	router.HandleFunc("/thanks", ThanksHandler)
 	router.HandleFunc("/models/{id}/release", ModelLandingHandler)
+	router.HandleFunc("/models/{id}/release-text", ModelReleaseTextHandler)
 
 	//Must go after all routes..
 	router.PathPrefix("/").Handler(http.FileServer(http.Dir("./static/")))

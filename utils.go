@@ -36,10 +36,11 @@ type Config struct {
 }
 
 type Content struct {
-	ArtistId string
-	ModelId  string
-	Model    ModelForm
-	Conf     *Config
+	ArtistId    string
+	ModelId     string
+	Model       ModelForm
+	Conf        *Config
+	ModelPdfBod string
 }
 
 func getConf() (conf *Config) {
@@ -48,6 +49,13 @@ func getConf() (conf *Config) {
 	conf = &Config{}
 	decoder.Decode(&conf)
 	return
+}
+
+func makeReleaseStringForModel(form BaseForm) string {
+	var config = getConf()
+	var content = config.ModelBody
+	return fmt.Sprintf(content, strings.ToUpper(form.FullName()),
+		form.GetDataAsString())
 }
 
 func makeModelPDF(form BaseForm) {
@@ -152,10 +160,11 @@ func makeContent(id bson.ObjectId, artistForm ArtistForm) Content {
 	model := *artistForm.ModelById(id)
 
 	return Content{
-		ArtistId: artistForm.Id.Hex(),
-		ModelId:  id.Hex(),
-		Model:    model,
-		Conf:     getConf(),
+		ArtistId:    artistForm.Id.Hex(),
+		ModelId:     id.Hex(),
+		Model:       model,
+		Conf:        getConf(),
+		ModelPdfBod: makeReleaseStringForModel(&model),
 	}
 }
 

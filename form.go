@@ -143,6 +143,17 @@ func (a *ArtistForm) ModelById(id bson.ObjectId) *ModelForm {
 	return &m
 }
 
+func (a *ArtistForm) WorkByContentId(id string) Work {
+	var w Work
+	for i := 0; i < len(a.Works); i++ {
+		if a.Works[i].ContentId == id {
+			w = a.Works[i]
+			break
+		}
+	}
+	return w
+}
+
 /**
  * This (and the other array setters) smell a bit. They should be
  * agnostic w/r/t the original form structure. DECOUPLE THIS STUFF ASAP!
@@ -154,12 +165,13 @@ func (a *ArtistForm) SetWorks(form map[string][]string) {
 
 	for i, e := range workIndices {
 		a.Works[i] = Work{
-			Id:          bson.NewObjectId(),
+			ContentId:   bson.NewObjectId().Hex(),
 			Name:        form[fmt.Sprintf("nameOfWork%d", e)][0],
 			Description: form[fmt.Sprintf("descOfWork%d", e)][0],
 			Extra:       form[fmt.Sprintf("extraForWork%d", e)][0],
 		}
 
+		fmt.Println(a.Works[i].Id)
 		a.Works[i].SetPhotos(form, e)
 		writeNewMetaData(&a.Works[i])
 	}
@@ -179,12 +191,14 @@ func (m *ModelForm) IsModel() bool {
 }
 
 func (m *ModelForm) GetWork() (error, Work) {
+	var work Work
 	err, artistForms := makeOrGetCollection("artistForms")
-	work := Work{}
-
-	query := bson.M{"works._id": bson.ObjectIdHex(m.WorkId)}
+	artistForm := ArtistForm{}
+	query := bson.M{"works.contentid": m.WorkId}
 	if err == nil {
-		artistForms.Find(query).One(&work)
+		artistForms.Find(query).One(&artistForm)
+		work = artistForm.WorkByContentId(m.WorkId)
+		fmt.Println(bson.ObjectIdHex(m.WorkId))
 	}
 	return err, work
 }
@@ -196,6 +210,7 @@ func (m *ModelForm) GetDataAsString() string {
 
 type Work struct {
 	Id          bson.ObjectId `bson:"_id"`
+	ContentId   string
 	Name        string
 	Description string
 	Extra       string
@@ -229,7 +244,7 @@ func (w *Work) SetPhotos(form map[string][]string, workIndex int) {
 	for i, e := range photoIndices {
 		w.Photos[i] = Photo{
 			Name:   form[fmt.Sprintf("nameOfPhoto%d%d", workIndex, e)][0],
-			WorkId: w.Id.Hex(),
+			WorkId: w.ContentId,
 		}
 
 		w.Photos[i].SetModels(form, workIndex, e)
