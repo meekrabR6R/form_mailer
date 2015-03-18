@@ -165,7 +165,9 @@ func (a *ArtistForm) SetWorks(form map[string][]string) {
 }
 
 type ModelForm struct {
-	Form `bson:",inline"`
+	Form  `bson:",inline"`
+	Photo *Photo
+	Work  *Work
 }
 
 func (m *ModelForm) IsArtist() bool {
@@ -177,7 +179,7 @@ func (m *ModelForm) IsModel() bool {
 }
 
 func (m *ModelForm) GetDataAsString() string {
-	return ""
+	return "[" + m.Work.Name + "] ([" + photosAsString(m.Work.Photos) + "]) (\"Images\"), "
 }
 
 type Work struct {
@@ -215,6 +217,7 @@ func (w *Work) SetPhotos(form map[string][]string, workIndex int) {
 	for i, e := range photoIndices {
 		w.Photos[i] = Photo{
 			Name: form[fmt.Sprintf("nameOfPhoto%d%d", workIndex, e)][0],
+			Work: w,
 		}
 
 		w.Photos[i].SetModels(form, workIndex, e)
@@ -225,6 +228,7 @@ func (w *Work) SetPhotos(form map[string][]string, workIndex int) {
 type Photo struct {
 	Id        bson.ObjectId `bson:"_id"`
 	Name      string
+	Work      *Work
 	Models    []ModelForm `bson:"models"`
 	CreatedAt time.Time
 	UpdatedAt time.Time
@@ -265,6 +269,9 @@ func (p *Photo) SetModels(form map[string][]string, workIndex int,
 					workIndex, photoIndex, e)][0],
 			},
 		}
+
+		p.Models[i].Photo = p
+		p.Models[i].Work = p.Work
 
 		writeNewMetaData(&p.Models[i].Form)
 	}

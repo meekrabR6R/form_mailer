@@ -72,12 +72,12 @@ func makeAPDF(form BaseForm, x float64, y float64) {
 	}
 
 	var body string
-	if len(form.GetDataAsString()) > 0 {
-		body = fmt.Sprintf(content, strings.ToUpper(form.FullName()),
-			form.GetDataAsString())
-	} else {
-		body = fmt.Sprintf(content, strings.ToUpper(form.FullName()))
-	}
+	//if len(form.GetDataAsString()) > 0 {
+	body = fmt.Sprintf(content, strings.ToUpper(form.FullName()),
+		form.GetDataAsString())
+	//} //else {
+	//	body = fmt.Sprintf(content, strings.ToUpper(form.FullName()))
+	//}
 
 	//time formatting
 	const layout = "Jan 2, 2006 at 3:04pm (MST)"
