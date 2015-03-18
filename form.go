@@ -198,7 +198,6 @@ func (m *ModelForm) GetWork() (error, Work) {
 	if err == nil {
 		artistForms.Find(query).One(&artistForm)
 		work = artistForm.WorkByContentId(m.WorkId)
-		fmt.Println(bson.ObjectIdHex(m.WorkId))
 	}
 	return err, work
 }
