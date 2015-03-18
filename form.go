@@ -91,7 +91,7 @@ func (a *ArtistForm) GetDataAsString() string {
 	index := 0
 	for _, work := range a.Works {
 		if index < (len(a.Works)-1) || len(a.Works) == 1 {
-			worksBuffer.WriteString(strings.ToUpper(work.Name) + ", ")
+			worksBuffer.WriteString("[" + work.Name + "] ([" + photosAsString(work.Photos) + "]) (\"Images\"), ")
 		} else {
 			worksBuffer.WriteString("and " + strings.ToUpper(work.Name) + ",")
 		}
@@ -328,6 +328,18 @@ func randomHex() string {
 		b[i] = numbers[rand.Intn(len(numbers))]
 	}
 	return string(b)
+}
+
+func photosAsString(photos []Photo) string {
+	var worksBuffer bytes.Buffer
+	for i, photo := range photos {
+		if i < len(photos)-1 {
+			worksBuffer.WriteString(photo.Name + ", ")
+		} else {
+			worksBuffer.WriteString(photo.Name)
+		}
+	}
+	return worksBuffer.String()
 }
 
 func writeNewMetaData(record Record) {
