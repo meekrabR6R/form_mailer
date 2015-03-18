@@ -90,7 +90,6 @@ func ModelLandingHandler(w http.ResponseWriter, req *http.Request) {
 	vars := mux.Vars(req)
 	id := bson.ObjectIdHex(vars["id"])
 	var conf = getConf()
-	w.Write([]byte(conf.MongoUser + " " + conf.MongoPass))
 	err, artistForm := getArtistFromCollection(id)
 	if err != nil {
 		errorHandler(w, req, err)
