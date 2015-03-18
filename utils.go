@@ -113,8 +113,9 @@ func makeAPDF(form BaseForm, x float64, y float64) {
 func writeArtistFormToDb(url string, sent bool, artistForm *ArtistForm) error {
 	artistForm.EmailSent = sent
 	err, artistFormsCollection := makeOrGetCollection("artistForms")
-	artistFormsCollection.Insert(artistForm)
-
+	if err == nil {
+		artistFormsCollection.Insert(artistForm)
+	}
 	return err
 }
 
@@ -126,6 +127,8 @@ func makeOrGetCollection(coll string) (error, *mgo.Collection) {
 	session, err := mgo.Dial(mongoUrl)
 	if err == nil {
 		session.DB(config.DbName).Login(config.MongoUser, config.MongoPass)
+	} else {
+		fmt.Println(err.Error())
 	}
 	return err, session.DB(config.DbName).C(coll)
 }

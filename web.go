@@ -110,9 +110,10 @@ func IndexHandler(w http.ResponseWriter, req *http.Request) {
 }
 
 func errorHandler(w http.ResponseWriter, r *http.Request, err error) {
+
 	w.WriteHeader(500)
-	errString := fmt.Sprint("Something broke.. :-/ womp womp:\n %s ")
-	fmt.Fprint(w, errString)
+	errString := "Something broke.. :-/ womp womp:\n" + err.Error()
+	w.Write([]byte(fmt.Sprintf("<h1>%s</h1>", errString)))
 }
 
 func main() {

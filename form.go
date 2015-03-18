@@ -154,6 +154,7 @@ func (a *ArtistForm) SetWorks(form map[string][]string) {
 
 	for i, e := range workIndices {
 		a.Works[i] = Work{
+			Id:          bson.NewObjectId(),
 			Name:        form[fmt.Sprintf("nameOfWork%d", e)][0],
 			Description: form[fmt.Sprintf("descOfWork%d", e)][0],
 			Extra:       form[fmt.Sprintf("extraForWork%d", e)][0],
@@ -165,9 +166,8 @@ func (a *ArtistForm) SetWorks(form map[string][]string) {
 }
 
 type ModelForm struct {
-	Form  `bson:",inline"`
-	Photo *Photo
-	Work  *Work
+	Form   `bson:",inline"`
+	WorkId string
 }
 
 func (m *ModelForm) IsArtist() bool {
@@ -178,8 +178,20 @@ func (m *ModelForm) IsModel() bool {
 	return true
 }
 
+func (m *ModelForm) GetWork() (error, Work) {
+	err, artistForms := makeOrGetCollection("artistForms")
+	work := Work{}
+
+	query := bson.M{"works._id": bson.ObjectIdHex(m.WorkId)}
+	if err == nil {
+		artistForms.Find(query).One(&work)
+	}
+	return err, work
+}
+
 func (m *ModelForm) GetDataAsString() string {
-	return "[" + m.Work.Name + "] ([" + photosAsString(m.Work.Photos) + "]) (\"Images\"), "
+	_, work := m.GetWork()
+	return "[" + work.Name + "] ([" + photosAsString(work.Photos) + "]) (\"Images\"), "
 }
 
 type Work struct {
@@ -216,8 +228,8 @@ func (w *Work) SetPhotos(form map[string][]string, workIndex int) {
 
 	for i, e := range photoIndices {
 		w.Photos[i] = Photo{
-			Name: form[fmt.Sprintf("nameOfPhoto%d%d", workIndex, e)][0],
-			Work: w,
+			Name:   form[fmt.Sprintf("nameOfPhoto%d%d", workIndex, e)][0],
+			WorkId: w.Id.Hex(),
 		}
 
 		w.Photos[i].SetModels(form, workIndex, e)
@@ -228,7 +240,7 @@ func (w *Work) SetPhotos(form map[string][]string, workIndex int) {
 type Photo struct {
 	Id        bson.ObjectId `bson:"_id"`
 	Name      string
-	Work      *Work
+	WorkId    string
 	Models    []ModelForm `bson:"models"`
 	CreatedAt time.Time
 	UpdatedAt time.Time
@@ -270,8 +282,7 @@ func (p *Photo) SetModels(form map[string][]string, workIndex int,
 			},
 		}
 
-		p.Models[i].Photo = p
-		p.Models[i].Work = p.Work
+		p.Models[i].WorkId = p.WorkId
 
 		writeNewMetaData(&p.Models[i].Form)
 	}
