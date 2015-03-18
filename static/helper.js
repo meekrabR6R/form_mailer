@@ -25,7 +25,7 @@ var photoSnippet = function(workIndex, photoIndex) {
 	   <div id=\"photoWrapper" +index+ "\" class=\"wrapper form-inline\">\
 	     <div class=\"form-group\">\
 	       <label for=\"nameOfPhoto" +index+ "\">File Name</label>\
-	       <input type=\"text\" class=\"form-control\" data-parsley-required=\"true\" name=\"nameOfPhoto" +index+ "\"id=\"nameOfPhoto" +index+ "\" placeholder=\"Name of Photo\">\
+	       <input type=\"text\" class=\"form-control file-name"+workIndex+"\" data-parsley-required=\"true\" name=\"nameOfPhoto" +index+ "\"id=\"nameOfPhoto" +index+ "\" placeholder=\"Name of Photo\">\
 	     </div>\
 	     <div class=\"form-group\">\
          	<label for=\"add-model-btn" +index+ "\" class=\"wrapper form-inline text-warning\">If applicable:</label>\
@@ -125,14 +125,35 @@ function getItemsStringByClass(className) {
 	var count = getItemCountByClass(className);
 	var index = 0;
 	$(className).each(function(){
+		console.log(count)
+		var str = "["+ $(this).val() + "] ([" + 
+			getPhotosAsString(".file-name"+ ((count - 1) - index)) + 
+			"]) (\"Images\"),"
+
   		if (index < count - 1 || count == 1) {
-  			works += $(this).val().toUpperCase() + ", ";
+  			works += str;
   		} else if (index == count - 1) {
-  			works += "and " + $(this).val().toUpperCase() + ",";
+  			works += "and " + str;
   		}
   		index++;
 	});
 	return works;
+}
+
+function getPhotosAsString(className) {
+	var photos = "";
+	var count = getItemCountByClass(className);
+	var index = 0;
+	$(className).each(function() {
+		console.log($(this).val());
+		if (index < count - 1) {
+			photos += $(this).val() + ", ";
+		} else {
+			photos += $(this).val();
+		}
+		index++;
+	});
+	return photos;
 }
 
 function getItemCountByClass(className) {

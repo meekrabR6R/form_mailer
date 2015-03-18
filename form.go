@@ -93,7 +93,7 @@ func (a *ArtistForm) GetDataAsString() string {
 		if index < (len(a.Works)-1) || len(a.Works) == 1 {
 			worksBuffer.WriteString("[" + work.Name + "] ([" + photosAsString(work.Photos) + "]) (\"Images\"), ")
 		} else {
-			worksBuffer.WriteString("and " + strings.ToUpper(work.Name) + ",")
+			worksBuffer.WriteString("and [" + work.Name + "] ([" + photosAsString(work.Photos) + "]) (\"Images\"),")
 		}
 		index++
 	}
