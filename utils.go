@@ -67,8 +67,18 @@ func makeModelPDF(form BaseForm) {
 func makeArtistPDF(form *ArtistForm) {
 	pdf := makeAPDF(form, 100, 720)
 
-	pdf.AddPage()
-	pdf.MultiCell(185, 5, "Sup, buddy?", "", "", false)
+	//bod := fmt.Sprintf("%-15s%-15s%-15s%-15s%-15s%-15s\n\n", "DATE",
+	//	"PROJECT NAME", "DESCRIP", "FILE NAME", "MODEL NAME",
+	//	"ADDITIONAL INFO")
+
+	//for _, work := range form.Works {
+	//	bod += fmt.Sprintf("%-15s%-15s%-15s%-15s%-15s%-15s\n", work.CreatedAt,
+	//		work.Name, work.Description, "---", "---", work.Extra)
+	//}
+
+	//pdf.AddPage()
+	//pdf.MultiCell(185, 5, bod, "", "", false)
+
 	_ = pdf.OutputFileAndClose(
 		fmt.Sprintf("%s_release.pdf", form.FullNameForFile()))
 }
