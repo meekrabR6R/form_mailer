@@ -59,14 +59,21 @@ func makeReleaseStringForModel(form BaseForm) string {
 }
 
 func makeModelPDF(form BaseForm) {
-	makeAPDF(form, 100, 520)
+	pdf := makeAPDF(form, 100, 520)
+	_ = pdf.OutputFileAndClose(
+		fmt.Sprintf("%s_release.pdf", form.FullNameForFile()))
 }
 
-func makeArtistPDF(form BaseForm) {
-	makeAPDF(form, 100, 720)
+func makeArtistPDF(form *ArtistForm) {
+	pdf := makeAPDF(form, 100, 720)
+
+	pdf.AddPage()
+	pdf.MultiCell(185, 5, "Sup, buddy?", "", "", false)
+	_ = pdf.OutputFileAndClose(
+		fmt.Sprintf("%s_release.pdf", form.FullNameForFile()))
 }
 
-func makeAPDF(form BaseForm, x float64, y float64) {
+func makeAPDF(form BaseForm, x float64, y float64) *gofpdf.Fpdf {
 	var config = getConf()
 	var title string
 	var content string
@@ -80,12 +87,8 @@ func makeAPDF(form BaseForm, x float64, y float64) {
 	}
 
 	var body string
-	//if len(form.GetDataAsString()) > 0 {
 	body = fmt.Sprintf(content, strings.ToUpper(form.FullName()),
 		form.GetDataAsString())
-	//} //else {
-	//	body = fmt.Sprintf(content, strings.ToUpper(form.FullName()))
-	//}
 
 	//time formatting
 	const layout = "Jan 2, 2006 at 3:04pm (MST)"
@@ -110,16 +113,12 @@ func makeAPDF(form BaseForm, x float64, y float64) {
 			(dot["my"]+y)/4)
 	}
 
-	err := pdf.OutputFileAndClose(
-		fmt.Sprintf("%s_release.pdf", form.FullNameForFile()))
-
-	if err != nil {
-		//panic(err)
-	}
+	return pdf
 }
 
 func writeArtistFormToDb(url string, sent bool, artistForm *ArtistForm) error {
 	artistForm.EmailSent = sent
+
 	err, artistFormsCollection := makeOrGetCollection("artistForms")
 	if err == nil {
 		artistFormsCollection.Insert(artistForm)
@@ -218,6 +217,7 @@ func sendArtistEmail(artistForm *ArtistForm) (error, bool) {
 func sendAdminEmailForArtist(form *ArtistForm) (error, bool) {
 	config := getConf()
 	makeArtistPDF(form)
+
 	return sendAdminEmail(form,
 		fmt.Sprintf(config.AdminBodyForArtist,
 			form.FullName(),
@@ -258,6 +258,7 @@ func sendModelEmailWithLink(artistForm *ArtistForm, modelForm *ModelForm) (error
 		"PERJUS Magazine model release form",
 		fmt.Sprintf(config.ModelEmailBodyOne,
 			strings.ToUpper(artistForm.FullName()),
+			"2", //todo: don't hardcode!!!!
 			url),
 		false,
 		modelForm)
