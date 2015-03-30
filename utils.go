@@ -51,6 +51,16 @@ func getConf() (conf *Config) {
 	return
 }
 
+func pdfCell(pdf *gofpdf.Fpdf, createdAt string, workName string,
+	workDes string, fileName string, modelName string, extra string) {
+	pdf.CellFormat(18, 10, createdAt, "1", 0, "L", false, 0, "")
+	pdf.CellFormat(30, 10, workName, "1", 0, "L", false, 0, "")
+	pdf.CellFormat(30, 10, workDes, "1", 0, "L", false, 0, "")
+	pdf.CellFormat(30, 10, fileName, "1", 0, "L", false, 0, "")
+	pdf.CellFormat(30, 10, modelName, "1", 0, "L", false, 0, "")
+	pdf.CellFormat(40, 10, extra, "1", 0, "L", false, 0, "")
+}
+
 func makeReleaseStringForModel(form BaseForm) string {
 	var config = getConf()
 	var content = config.ModelBody
@@ -70,13 +80,45 @@ func makeArtistPDF(form *ArtistForm) {
 	//bod := fmt.Sprintf("%-15s%-15s%-15s%-15s%-15s%-15s\n\n", "DATE",
 	//	"PROJECT NAME", "DESCRIP", "FILE NAME", "MODEL NAME",
 	//	"ADDITIONAL INFO")
+	pdf.AddPage()
+	pdf.SetFont("Times", "B", 7)
+	pdf.CellFormat(18, 10, "DATE", "1", 0, "L", false, 0, "")
+	pdf.CellFormat(30, 10, "PROJECT NAME", "1", 0, "L", false, 0, "")
+	pdf.CellFormat(30, 10, "DESCRIP", "1", 0, "L", false, 0, "")
+	pdf.CellFormat(30, 10, "FILE NAME", "1", 0, "L", false, 0, "")
+	pdf.CellFormat(30, 10, "MODEL NAME", "1", 0, "L", false, 0, "")
+	pdf.CellFormat(40, 10, "ADDITIONAL INFO", "1", 0, "L", false, 0, "")
 
-	//for _, work := range form.Works {
-	//	bod += fmt.Sprintf("%-15s%-15s%-15s%-15s%-15s%-15s\n", work.CreatedAt,
-	//		work.Name, work.Description, "---", "---", work.Extra)
-	//}
+	var x float64 = 10
+	var y float64 = 25
 
-	//pdf.AddPage()
+	const layout = "Jan 2, 2006"
+	for _, work := range form.Works {
+		if len(work.Photos) > 0 {
+			for _, file := range work.Photos {
+				if len(file.Models) > 0 {
+					for _, model := range file.Models {
+						pdf.SetXY(x, y)
+						pdfCell(pdf, work.CreatedAt.Format(layout), work.Name, work.Description,
+							file.Name, model.FullName(), work.Extra)
+
+						y += 10
+					}
+				} else {
+					pdf.SetXY(x, y)
+					pdfCell(pdf, work.CreatedAt.Format(layout), work.Name, work.Description,
+						file.Name, "N/A", work.Extra)
+					y += 10
+				}
+			}
+		} else {
+			pdf.SetXY(x, y)
+			pdfCell(pdf, work.CreatedAt.Format(layout), work.Name, work.Description,
+				"N/A", "N/A", work.Extra)
+			y += 10
+		}
+	}
+
 	//pdf.MultiCell(185, 5, bod, "", "", false)
 
 	_ = pdf.OutputFileAndClose(
