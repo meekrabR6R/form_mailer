@@ -75,7 +75,7 @@ func makeModelPDF(form BaseForm) {
 }
 
 func makeArtistPDF(form *ArtistForm) {
-	pdf := makeAPDF(form, 100, 870)
+	pdf := makeAPDF(form, 100, 985)
 
 	//bod := fmt.Sprintf("%-15s%-15s%-15s%-15s%-15s%-15s\n\n", "DATE",
 	//	"PROJECT NAME", "DESCRIP", "FILE NAME", "MODEL NAME",
