@@ -139,7 +139,7 @@ func errorHandler(w http.ResponseWriter, r *http.Request, err error) {
 }
 
 func main() {
-	portPtr := flag.String("port", "3000", "port number")
+	portPtr := flag.String("port", "foo", "port number")
 	flag.Parse()
 
 	router := mux.NewRouter()
