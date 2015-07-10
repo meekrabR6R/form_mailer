@@ -68,7 +68,7 @@ func (f *Form) FullNameForFile() string {
 }
 
 func (f *Form) FullAddress() string {
-	return fmt.Sprintf("%s, %s, %s %s, %s, %s",
+	return fmt.Sprintf("%s %s, %s %s %s %s",
 		f.AddressOne, f.AddressTwo, f.City, f.State, f.Zip, f.Country)
 }
 
@@ -357,6 +357,7 @@ func makeArtistForm(form map[string][]string) (error, *ArtistForm) {
 			City:       form["city"][0],
 			State:      form["state"][0],
 			Zip:        form["zip"][0],
+			Country:    form["country"][0],
 			Email:      form["emailAddress"][0],
 			Link:       form["downloadLink"][0],
 		},

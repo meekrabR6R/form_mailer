@@ -75,13 +75,14 @@ func makeModelPDF(form BaseForm) {
 }
 
 func makeArtistPDF(form *ArtistForm) {
-	pdf := makeAPDF(form, 100, 720)
+	pdf := makeAPDF(form, 100, 870)
 
 	//bod := fmt.Sprintf("%-15s%-15s%-15s%-15s%-15s%-15s\n\n", "DATE",
 	//	"PROJECT NAME", "DESCRIP", "FILE NAME", "MODEL NAME",
 	//	"ADDITIONAL INFO")
 	pdf.AddPage()
 	pdf.SetFont("Times", "B", 7)
+
 	pdf.CellFormat(18, 10, "DATE", "1", 0, "L", false, 0, "")
 	pdf.CellFormat(30, 10, "PROJECT NAME", "1", 0, "L", false, 0, "")
 	pdf.CellFormat(30, 10, "DESCRIP", "1", 0, "L", false, 0, "")
@@ -139,21 +140,24 @@ func makeAPDF(form BaseForm, x float64, y float64) *gofpdf.Fpdf {
 	}
 
 	var body string
-	body = fmt.Sprintf(content, strings.ToUpper(form.FullName()),
-		form.GetDataAsString())
+	body = content //fmt.Sprintf(content, strings.ToUpper(form.FullName()),
+	//form.GetDataAsString())
 
 	//time formatting
 	const layout = "Jan 2, 2006 at 3:04pm (MST)"
 	t := time.Now()
 	//hacky formtting... but i'm so tired..
-	pdfBody := fmt.Sprintf("%s\n\n%s\n\n\nDate: %s\n\nSignature:",
+	pdfBody := fmt.Sprintf("%s\n\n%s\n\n\nContributor Name and Address:\n%s\n%s\n\nDate: %s\n\nSignature:",
 		title,
 		body,
+		form.FullName(),
+		form.FullAddress(),
 		t.Format(layout))
 
 	pdf := gofpdf.New("P", "mm", "A4", "../font")
 	pdf.AddPage()
 	pdf.SetFont("Times", "B", 10)
+
 	pdf.MultiCell(185, 5, pdfBody, "", "", false)
 
 	//write sig
