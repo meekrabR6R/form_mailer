@@ -156,7 +156,7 @@ func main() {
 
 	bind := fmt.Sprintf("%s:%s", os.Getenv("HOST"), os.Getenv("PORT"))
 
-	if *portPtr != "foo" {
+	if *portPtr != "port number" {
 		fmt.Printf("listening on %s...\n", *portPtr)
 		port := fmt.Sprintf(":%s", *portPtr)
 		err := http.ListenAndServe(port, nil)
