@@ -110,13 +110,13 @@ function setFormClickListeners() {
 
 function makeAndShowReleaseForm() {
 	var releaseString = $("#hidden-release-text").val();
-	var firstName     = $("#firstName").val();
-	var lastName      = $("#lastName").val();
-	var fullName      = (firstName + " " + lastName).toUpperCase();
-	var works         = getItemsStringByClass(".work-name")
-	var newString = vsprintf(releaseString, [fullName, works]);
+	//var firstName     = $("#firstName").val();
+	//var lastName      = $("#lastName").val();
+	//var fullName      = (firstName + " " + lastName).toUpperCase();
+	//var works         = getItemsStringByClass(".work-name")
+	//var newString = vsprintf(releaseString, [works]);
 
-	$("#release-text").text(newString)
+	$("#release-text").text(releaseString)//newString)
 	$("#release-modal").modal();
 }
 
