@@ -139,7 +139,7 @@ func errorHandler(w http.ResponseWriter, r *http.Request, err error) {
 }
 
 func main() {
-	portPtr := flag.String("port", "8080", "port number")
+	portPtr := flag.String("port", "3000", "port number")
 	flag.Parse()
 
 	router := mux.NewRouter()
@@ -156,7 +156,7 @@ func main() {
 
 	bind := fmt.Sprintf("%s:%s", os.Getenv("HOST"), os.Getenv("PORT"))
 
-	if *portPtr != "port number" {
+	if *portPtr != "foo" {
 		fmt.Printf("listening on %s...\n", *portPtr)
 		port := fmt.Sprintf(":%s", *portPtr)
 		err := http.ListenAndServe(port, nil)
