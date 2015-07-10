@@ -21,6 +21,7 @@ type Record interface {
 type BaseForm interface {
 	FullName() string
 	FullNameForFile() string
+	FullAddress() string
 	SetSignature(string) error
 	GetSignature() []map[string]float64
 	GetDataAsString() string
@@ -29,15 +30,21 @@ type BaseForm interface {
 }
 
 type Form struct {
-	Id        bson.ObjectId `bson:"_id"`
-	FirstName string
-	LastName  string
-	Email     string
-	Link      string
-	Sig       []map[string]float64
-	EmailSent bool
-	CreatedAt time.Time
-	UpdatedAt time.Time
+	Id         bson.ObjectId `bson:"_id"`
+	FirstName  string
+	LastName   string
+	AddressOne string
+	AddressTwo string
+	City       string
+	State      string
+	Zip        string
+	Country    string
+	Email      string
+	Link       string
+	Sig        []map[string]float64
+	EmailSent  bool
+	CreatedAt  time.Time
+	UpdatedAt  time.Time
 }
 
 func (f *Form) SetId() {
@@ -58,6 +65,11 @@ func (f *Form) FullName() string {
 
 func (f *Form) FullNameForFile() string {
 	return fmt.Sprintf("%s_%s", f.FirstName, f.LastName)
+}
+
+func (f *Form) FullAddress() string {
+	return fmt.Sprintf("%s, %s, %s %s, %s, %s",
+		f.AddressOne, f.AddressTwo, f.City, f.State, f.Zip, f.Country)
 }
 
 func (f *Form) SetSignature(sigString string) error {
@@ -338,10 +350,15 @@ func getIndices(filter string, form map[string][]string) []int {
 func makeArtistForm(form map[string][]string) (error, *ArtistForm) {
 	artistForm := &ArtistForm{
 		Form: Form{
-			FirstName: form["firstName"][0],
-			LastName:  form["lastName"][0],
-			Email:     form["emailAddress"][0],
-			Link:      form["downloadLink"][0],
+			FirstName:  form["firstName"][0],
+			LastName:   form["lastName"][0],
+			AddressOne: form["addressOne"][0],
+			AddressTwo: form["addressTwo"][0],
+			City:       form["city"][0],
+			State:      form["state"][0],
+			Zip:        form["zip"][0],
+			Email:      form["emailAddress"][0],
+			Link:       form["downloadLink"][0],
 		},
 	}
 
