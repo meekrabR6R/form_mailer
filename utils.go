@@ -69,7 +69,7 @@ func makeReleaseStringForModel(form BaseForm) string {
 }
 
 func makeModelPDF(form BaseForm) {
-	pdf := makeAPDF(form, 100, 520)
+	pdf := writeSig(makeAPDF(form, 100, 520), form, 100, 520)
 	_ = pdf.OutputFileAndClose(
 		fmt.Sprintf("%s_release.pdf", form.FullNameForFile()))
 }
@@ -81,6 +81,7 @@ func makeArtistPDF(form *ArtistForm) {
 	//	"PROJECT NAME", "DESCRIP", "FILE NAME", "MODEL NAME",
 	//	"ADDITIONAL INFO")
 	pdf.AddPage()
+	pdf.Text(10, 5, "Page 2")
 	pdf.SetFont("Times", "B", 7)
 
 	pdf.CellFormat(18, 10, "DATE", "1", 0, "L", false, 0, "")
@@ -92,7 +93,6 @@ func makeArtistPDF(form *ArtistForm) {
 
 	var x float64 = 10
 	var y float64 = 25
-
 	const layout = "Jan 2, 2006"
 	for _, work := range form.Works {
 		if len(work.Photos) > 0 {
@@ -104,12 +104,14 @@ func makeArtistPDF(form *ArtistForm) {
 							file.Name, model.FullName(), work.Extra)
 
 						y += 10
+						//sigY += 50
 					}
 				} else {
 					pdf.SetXY(x, y)
 					pdfCell(pdf, work.CreatedAt.Format(layout), work.Name, work.Description,
 						file.Name, "N/A", work.Extra)
 					y += 10
+					//sigY += 50
 				}
 			}
 		} else {
@@ -117,8 +119,11 @@ func makeArtistPDF(form *ArtistForm) {
 			pdfCell(pdf, work.CreatedAt.Format(layout), work.Name, work.Description,
 				"N/A", "N/A", work.Extra)
 			y += 10
+			//sigY += 50
 		}
 	}
+
+	pdf = writeSig(pdf, form, x, y)
 
 	//pdf.MultiCell(185, 5, bod, "", "", false)
 
@@ -144,15 +149,10 @@ func makeAPDF(form BaseForm, x float64, y float64) *gofpdf.Fpdf {
 	//form.GetDataAsString())
 
 	//time formatting
-	const layout = "Jan 2, 2006 at 3:04pm (MST)"
-	t := time.Now()
+	//const layout = "Jan 2, 2006 at 3:04pm (MST)"
+	//t := time.Now()
 	//hacky formtting... but i'm so tired..
-	pdfBody := fmt.Sprintf("%s\n\n%s\n\n\nContributor Name and Address:\n%s\n%s\n\nDate: %s\n\nSignature:",
-		title,
-		body,
-		form.FullName(),
-		form.FullAddress(),
-		t.Format(layout))
+	pdfBody := fmt.Sprintf("Page 1\n\n%s\n\n%s", title, body)
 
 	pdf := gofpdf.New("P", "mm", "A4", "../font")
 	pdf.AddPage()
@@ -160,6 +160,24 @@ func makeAPDF(form BaseForm, x float64, y float64) *gofpdf.Fpdf {
 
 	pdf.MultiCell(185, 5, pdfBody, "", "", false)
 
+	//write sig
+	return pdf
+}
+
+func writeSig(pdf *gofpdf.Fpdf, form BaseForm, x float64, y float64) *gofpdf.Fpdf {
+	//time formatting
+	const layout = "Jan 2, 2006 at 3:04pm (MST)"
+	t := time.Now()
+	pdf.SetXY(x, y+5)
+	pdf.SetFont("Times", "B", 10)
+	pdfBody := fmt.Sprintf("\n\nContributor Name and Address:\n%s\n%s\n\nDate: %s\n\nSignature:",
+		form.FullName(),
+		form.FullAddress(),
+		t.Format(layout))
+
+	pdf.Write(4, pdfBody)
+	y = ((y + 15) * 4) + 70
+	x = x + 75
 	//write sig
 	for i := 0; i < len(form.GetSignature()); i++ {
 		dot := form.GetSignature()[i]
