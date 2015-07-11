@@ -293,7 +293,6 @@ func (p *Photo) SetModels(form map[string][]string, workIndex int,
 	numItems := getItemCount(filter, form)
 	modelIndices := getIndices(filter, form)
 	p.Models = make([]ModelForm, numItems)
-
 	for i, e := range modelIndices {
 		p.Models[i] = ModelForm{
 			Form: Form{
