@@ -64,8 +64,8 @@ func pdfCell(pdf *gofpdf.Fpdf, createdAt string, workName string,
 func makeReleaseStringForModel(form BaseForm) string {
 	var config = getConf()
 	var content = config.ModelBody
-	return fmt.Sprintf(content, strings.ToUpper(form.FullName()),
-		form.GetDataAsString())
+	return fmt.Sprintf(content) //, strings.ToUpper(form.FullName()),
+	//form.GetDataAsString())
 }
 
 func makeModelPDF(form BaseForm) {

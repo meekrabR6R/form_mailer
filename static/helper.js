@@ -8,7 +8,7 @@ var workSnippet = function(index) {
          </div>\
          <div class=\"form-group\">\
            <label for=\"descOfWork" +index+ "\">Description (optional)</label>\
-	       <input type=\"text\" class=\"form-control\" data-parsley-required=\"true\" name=\"descOfWork" +index+"\" id=\"descOfWork" +index+ "\" placeholder=\"Description of Work\">\
+	       <input type=\"text\" class=\"form-control\" data-parsley-required=\"false\" name=\"descOfWork" +index+"\" id=\"descOfWork" +index+ "\" placeholder=\"Description of Work\">\
          </div>\
          <div class=\"form-group\">\
          	<label for=\"extraForWork" +index+ "\">Additional notes (optional) ie: Location, Date, HMU, Creative Direction, etc.</label>\
