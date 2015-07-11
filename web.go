@@ -23,6 +23,7 @@ func WorkFormHandler(w http.ResponseWriter, req *http.Request) {
 
 	err1, artistForm := makeArtistForm(form)
 	if err1 != nil {
+		fmt.Println(err1)
 		//panic(err1)
 	}
 
@@ -30,6 +31,7 @@ func WorkFormHandler(w http.ResponseWriter, req *http.Request) {
 		err2, sent := sendArtistEmail(artistForm)
 		if err2 != nil {
 			//panic(err2)
+			fmt.Println(err2)
 			errorHandler(w, req, err2)
 		}
 		sendAdminEmailForArtist(artistForm)

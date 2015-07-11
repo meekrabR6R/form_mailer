@@ -365,7 +365,6 @@ func makeArtistForm(form map[string][]string) (error, *ArtistForm) {
 	writeNewMetaData(artistForm)
 
 	err := artistForm.SetSignature(form["output"][0])
-
 	return err, artistForm
 }
 
