@@ -182,8 +182,6 @@ func (a *ArtistForm) SetWorks(form map[string][]string) {
 			Description: form[fmt.Sprintf("descOfWork%d", e)][0],
 			Extra:       form[fmt.Sprintf("extraForWork%d", e)][0],
 		}
-
-		fmt.Println(a.Works[i].Id)
 		a.Works[i].SetPhotos(form, e)
 		writeNewMetaData(&a.Works[i])
 	}
@@ -365,6 +363,7 @@ func makeArtistForm(form map[string][]string) (error, *ArtistForm) {
 
 	artistForm.SetWorks(form)
 	writeNewMetaData(artistForm)
+
 	err := artistForm.SetSignature(form["output"][0])
 
 	return err, artistForm

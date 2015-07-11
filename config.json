@@ -5,7 +5,7 @@
 	"mongopass": "ibL8Dltas1Me",
 	"dbname": "perjusmagrelease",
 	"senderemail": "perjusmag@gmail.com",
-	"senderpass": "ontheupbeat",
+	"senderpass": "xxontheupbeat",
 	"adminbodyforartist": "Attached is the signed release form for %s. Work can be found <a href=\"%s\">here</a>.",
 	"adminbodyformodel": "Attached is the signed release form for %s.",
 	"artistemailbody": "Please see attached release form for your submissions to PERJUS Magazine. Please reach out to perjusmag@gmail.com if you have any questions. Do not reply to this email.",
