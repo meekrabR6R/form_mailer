@@ -37,7 +37,12 @@ func WorkFormHandler(w http.ResponseWriter, req *http.Request) {
 		sendAdminEmailForArtist(artistForm)
 		sendAllModelEmails(artistForm)
 
-		writeArtistFormToDb(config.MongoUrl, sent, artistForm)
+		err := writeArtistFormToDb(config.MongoUrl, sent, artistForm)
+		if err != nil {
+			fmt.Println(err.Error())
+		} else {
+			fmt.Println("Form written to db")
+		}
 	}()
 
 	http.Redirect(w, req, "/thanks", 301)
