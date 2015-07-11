@@ -206,10 +206,13 @@ func writeArtistFormToDb(url string, sent bool, artistForm *ArtistForm) error {
 func makeOrGetCollection(coll string) (error, *mgo.Collection) {
 	config := getConf()
 
-	mongoUrl := fmt.Sprintf("mongodb://%s:%s/",
-		os.Getenv("OPENSHIFT_MONGODB_DB_HOST"), os.Getenv("OPENSHIFT_MONGODB_DB_PORT"))
+	mongoUrl := fmt.Sprintf("mongodb://%s:%s@%s:%s/",
+		config.MongoUser,
+		config.MongoPass,
+		os.Getenv("OPENSHIFT_MONGODB_DB_HOST"),
+		os.Getenv("OPENSHIFT_MONGODB_DB_PORT"))
 	session, err := mgo.Dial(mongoUrl)
-	fmt.Printf("\nSESS: %s\nURL: %s", session, mongoUrl)
+
 	if err == nil {
 		session.DB(config.DbName).Login(config.MongoUser, config.MongoPass)
 	} else {
