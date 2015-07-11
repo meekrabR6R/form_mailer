@@ -195,6 +195,7 @@ func writeArtistFormToDb(url string, sent bool, artistForm *ArtistForm) error {
 	artistForm.EmailSent = sent
 	err, artistFormsCollection := makeOrGetCollection("artistForms")
 	if err == nil {
+		fmt.Printf("\nCOLL::%s\nFORM::%s\n", artistFormsCollection, artistForm)
 		artistFormsCollection.Insert(artistForm)
 	} else {
 		fmt.Println(err.Error())
@@ -213,7 +214,6 @@ func makeOrGetCollection(coll string) (error, *mgo.Collection) {
 	} else {
 		fmt.Println(err.Error())
 	}
-	fmt.Printf("\nYUPPERS: %s\n", session.DB(config.DbName).C(coll))
 	return err, session.DB(config.DbName).C(coll)
 }
 
