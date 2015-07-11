@@ -138,6 +138,27 @@ func (a *ArtistForm) SetModelSentById(id bson.ObjectId, sent bool) {
 	}
 }
 
+func (a *ArtistForm) UpdateModelById(id bson.ObjectId, form map[string][]string) {
+	for i := 0; i < len(a.Works); i++ {
+		for j := 0; j < len(a.Works[i].Photos); j++ {
+			for k := 0; k < len(a.Works[i].Photos[j].Models); k++ {
+				if a.Works[i].Photos[j].Models[k].Id == id {
+					a.Works[i].Photos[j].Models[k].FirstName = form["firstName"][0]
+					a.Works[i].Photos[j].Models[k].LastName = form["lastName"][0]
+					a.Works[i].Photos[j].Models[k].Email = form["email"][0]
+					a.Works[i].Photos[j].Models[k].AddressOne = form["addressOne"][0]
+					a.Works[i].Photos[j].Models[k].AddressTwo = form["addressTwo"][0]
+					a.Works[i].Photos[j].Models[k].City = form["city"][0]
+					a.Works[i].Photos[j].Models[k].State = form["state"][0]
+					a.Works[i].Photos[j].Models[k].Zip = form["zip"][0]
+					a.Works[i].Photos[j].Models[k].Country = form["country"][0]
+					break
+				}
+			}
+		}
+	}
+}
+
 func (a *ArtistForm) ModelById(id bson.ObjectId) *ModelForm {
 	var m ModelForm
 

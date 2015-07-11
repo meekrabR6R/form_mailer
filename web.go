@@ -71,6 +71,8 @@ func ModelFormHandler(w http.ResponseWriter, req *http.Request) {
 		var artist ArtistForm
 		artistForms.FindId(artistId).One(&artist)
 		artist.SetModelSigById(modelId, form["output"][0])
+		artist.UpdateModelById(modelId, form)
+
 		artistForms.UpdateId(artistId, artist)
 		model := artist.ModelById(modelId)
 
