@@ -69,7 +69,7 @@ func makeReleaseStringForModel(form BaseForm) string {
 }
 
 func makeModelPDF(form BaseForm) {
-	pdf := writeSig(makeAPDF(form, 100, 520), form, 100, 1120)
+	pdf := writeSig(makeAPDF(form, 100, 520), form, 100, 1020)
 	_ = pdf.OutputFileAndClose(
 		fmt.Sprintf("%s_release.pdf", form.FullNameForFile()))
 }
