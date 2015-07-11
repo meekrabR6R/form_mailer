@@ -145,7 +145,7 @@ func (a *ArtistForm) UpdateModelById(id bson.ObjectId, form map[string][]string)
 				if a.Works[i].Photos[j].Models[k].Id == id {
 					a.Works[i].Photos[j].Models[k].FirstName = form["firstName"][0]
 					a.Works[i].Photos[j].Models[k].LastName = form["lastName"][0]
-					a.Works[i].Photos[j].Models[k].Email = form["email"][0]
+					a.Works[i].Photos[j].Models[k].Email = form["emailAddress"][0]
 					a.Works[i].Photos[j].Models[k].AddressOne = form["addressOne"][0]
 					a.Works[i].Photos[j].Models[k].AddressTwo = form["addressTwo"][0]
 					a.Works[i].Photos[j].Models[k].City = form["city"][0]
