@@ -124,6 +124,9 @@ func makeArtistPDF(form *ArtistForm) {
 		}
 	}
 
+	pdf.SetXY(x, y+5)
+	y = ((y + 15) * 4) + 70
+	x = x + 75
 	pdf = writeSig(pdf, form, x, y)
 
 	//pdf.MultiCell(185, 5, bod, "", "", false)
@@ -169,7 +172,7 @@ func writeSig(pdf *gofpdf.Fpdf, form BaseForm, x float64, y float64) *gofpdf.Fpd
 	//time formatting
 	const layout = "Jan 2, 2006 at 3:04pm (MST)"
 	t := time.Now()
-	pdf.SetXY(x, y+5)
+
 	pdf.SetFont("Times", "B", 10)
 	pdfBody := fmt.Sprintf("\n\nContributor Name and Address:\n%s\n%s\n\nDate: %s\n\nSignature:",
 		form.FullName(),
@@ -177,8 +180,6 @@ func writeSig(pdf *gofpdf.Fpdf, form BaseForm, x float64, y float64) *gofpdf.Fpd
 		t.Format(layout))
 
 	pdf.Write(4, pdfBody)
-	y = ((y + 15) * 4) + 70
-	x = x + 75
 	//write sig
 	for i := 0; i < len(form.GetSignature()); i++ {
 		dot := form.GetSignature()[i]
