@@ -82,8 +82,9 @@ func makeArtistPDF(form *ArtistForm) {
 	//	"ADDITIONAL INFO")
 	pdf.AddPage()
 	pdf.Text(10, 5, "Page 2")
+	pdf.Write(3, "Content:")
 	pdf.SetFont("Times", "B", 7)
-
+	pdf.SetY(15)
 	pdf.CellFormat(18, 10, "DATE", "1", 0, "L", false, 0, "")
 	pdf.CellFormat(30, 10, "PROJECT NAME", "1", 0, "L", false, 0, "")
 	pdf.CellFormat(30, 10, "DESCRIP", "1", 0, "L", false, 0, "")
