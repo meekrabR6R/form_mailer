@@ -194,6 +194,7 @@ func writeSig(pdf *gofpdf.Fpdf, form BaseForm, x float64, y float64) *gofpdf.Fpd
 func writeArtistFormToDb(url string, sent bool, artistForm *ArtistForm) error {
 	artistForm.EmailSent = sent
 	err, artistFormsCollection := makeOrGetCollection("artistForms")
+	fmt.Printf("\nERROR::%s", err.Error())
 	if err == nil {
 		fmt.Printf("\nCOLL::%s\nFORM::%s\n", artistFormsCollection, artistForm)
 		artistFormsCollection.Insert(artistForm)
