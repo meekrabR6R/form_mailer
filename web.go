@@ -131,7 +131,7 @@ func ModelReleaseTextHandler(w http.ResponseWriter, req *http.Request) {
 }
 
 func SubmissionsHandler(w http.ResponseWriter, req *http.Request) {
-	t, _ := template.ParseFiles("static/release_landing_page.html")
+	t, _ := template.ParseFiles("static/submissions.html")
 	t.Execute(w, new(interface{}))
 }
 
