@@ -54,11 +54,11 @@ func getConf() (conf *Config) {
 func pdfCell(pdf *gofpdf.Fpdf, createdAt string, workName string,
 	workDes string, fileName string, modelName string, extra string) {
 	pdf.CellFormat(18, 10, createdAt, "1", 0, "L", false, 0, "")
-	pdf.CellFormat(30, 10, workName, "1", 0, "L", false, 0, "")
-	pdf.CellFormat(30, 10, workDes, "1", 0, "L", false, 0, "")
-	pdf.CellFormat(30, 10, fileName, "1", 0, "L", false, 0, "")
-	pdf.CellFormat(30, 10, modelName, "1", 0, "L", false, 0, "")
-	pdf.CellFormat(40, 10, extra, "1", 0, "L", false, 0, "")
+	pdf.CellFormat(60, 10, workName, "1", 0, "L", false, 0, "")
+	//pdf.CellFormat(30, 10, workDes, "1", 0, "L", false, 0, "")
+	pdf.CellFormat(50, 10, fileName, "1", 0, "L", false, 0, "")
+	pdf.CellFormat(50, 10, modelName, "1", 0, "L", false, 0, "")
+	//pdf.CellFormat(40, 10, extra, "1", 0, "L", false, 0, "")
 }
 
 func makeReleaseStringForModel(form BaseForm) string {
@@ -86,11 +86,11 @@ func makeArtistPDF(form *ArtistForm) {
 	pdf.SetFont("Times", "B", 7)
 	pdf.SetY(15)
 	pdf.CellFormat(18, 10, "DATE", "1", 0, "L", false, 0, "")
-	pdf.CellFormat(30, 10, "PROJECT NAME", "1", 0, "L", false, 0, "")
-	pdf.CellFormat(30, 10, "DESCRIP", "1", 0, "L", false, 0, "")
-	pdf.CellFormat(30, 10, "FILE NAME", "1", 0, "L", false, 0, "")
-	pdf.CellFormat(30, 10, "MODEL NAME", "1", 0, "L", false, 0, "")
-	pdf.CellFormat(40, 10, "ADDITIONAL INFO", "1", 0, "L", false, 0, "")
+	pdf.CellFormat(60, 10, "PROJECT NAME", "1", 0, "L", false, 0, "")
+	//pdf.CellFormat(30, 10, "DESCRIP", "1", 0, "L", false, 0, "")
+	pdf.CellFormat(50, 10, "FILE NAME", "1", 0, "L", false, 0, "")
+	pdf.CellFormat(50, 10, "MODEL NAME", "1", 0, "L", false, 0, "")
+	//pdf.CellFormat(40, 10, "ADDITIONAL INFO", "1", 0, "L", false, 0, "")
 
 	var x float64 = 10
 	var y float64 = 25
@@ -207,11 +207,12 @@ func writeArtistFormToDb(url string, sent bool, artistForm *ArtistForm) error {
 func makeOrGetCollection(coll string) (error, *mgo.Collection) {
 	config := getConf()
 
-	mongoUrl := fmt.Sprintf("mongodb://%s:%s@%s:%s/",
-		config.MongoUser,
-		config.MongoPass,
-		os.Getenv("OPENSHIFT_MONGODB_DB_HOST"),
-		os.Getenv("OPENSHIFT_MONGODB_DB_PORT"))
+	//mongoUrl := fmt.Sprintf("mongodb://%s:%s@%s:%s/",
+	//	config.MongoUser,
+	//	config.MongoPass,
+	//	os.Getenv("OPENSHIFT_MONGODB_DB_HOST"),
+	//	os.Getenv("OPENSHIFT_MONGODB_DB_PORT"))
+	mongoUrl := "mongodb://127.0.0.1:27017/"
 	session, err := mgo.Dial(mongoUrl)
 
 	if err == nil {
@@ -235,6 +236,17 @@ func getArtistFromCollection(id bson.ObjectId) (error, ArtistForm) {
 	err1 := artistForms.Find(query).One(&artistForm)
 
 	return err1, artistForm
+}
+
+func getAllSubmissions() (error, []ArtistForm) {
+	err, artistForms := makeOrGetCollection("artistForms")
+
+	var m []ArtistForm //bson.M
+	err = artistForms.Find(nil).Sort("updated_at").All(&m)
+	//if err != nil {
+	//panic(err)
+	//}
+	return err, m
 }
 
 func makeContent(id bson.ObjectId, artistForm ArtistForm) Content {

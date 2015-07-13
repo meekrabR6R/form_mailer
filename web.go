@@ -130,6 +130,16 @@ func ModelReleaseTextHandler(w http.ResponseWriter, req *http.Request) {
 	json.NewEncoder(w).Encode(m)
 }
 
+func SubmissionsHandler(w http.ResponseWriter, req *http.Request) {
+	t, _ := template.ParseFiles("static/release_landing_page.html")
+	t.Execute(w, new(interface{}))
+}
+
+func FormsHandler(w http.ResponseWriter, req *http.Request) {
+	_, forms := getAllSubmissions()
+	json.NewEncoder(w).Encode(forms)
+}
+
 func ThanksHandler(w http.ResponseWriter, req *http.Request) {
 	t, _ := template.ParseFiles("static/release_landing_page.html")
 	t.Execute(w, new(interface{}))
@@ -156,6 +166,8 @@ func main() {
 	router.HandleFunc("/work", WorkFormHandler)
 	router.HandleFunc("/model", ModelFormHandler)
 	router.HandleFunc("/thanks", ThanksHandler)
+	router.HandleFunc("/submissions", SubmissionsHandler)
+	router.HandleFunc("/forms_json", FormsHandler)
 	router.HandleFunc("/models/{id}/release", ModelLandingHandler)
 	router.HandleFunc("/models/{id}/release-text", ModelReleaseTextHandler)
 
