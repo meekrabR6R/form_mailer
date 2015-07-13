@@ -207,12 +207,12 @@ func writeArtistFormToDb(url string, sent bool, artistForm *ArtistForm) error {
 func makeOrGetCollection(coll string) (error, *mgo.Collection) {
 	config := getConf()
 
-	//mongoUrl := fmt.Sprintf("mongodb://%s:%s@%s:%s/",
-	//	config.MongoUser,
-	//	config.MongoPass,
-	//	os.Getenv("OPENSHIFT_MONGODB_DB_HOST"),
-	//	os.Getenv("OPENSHIFT_MONGODB_DB_PORT"))
-	mongoUrl := "mongodb://127.0.0.1:27017/"
+	mongoUrl := fmt.Sprintf("mongodb://%s:%s@%s:%s/",
+		config.MongoUser,
+		config.MongoPass,
+		os.Getenv("OPENSHIFT_MONGODB_DB_HOST"),
+		os.Getenv("OPENSHIFT_MONGODB_DB_PORT"))
+	//mongoUrl := "mongodb://127.0.0.1:27017/"
 	session, err := mgo.Dial(mongoUrl)
 
 	if err == nil {
