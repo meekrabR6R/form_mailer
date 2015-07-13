@@ -108,6 +108,8 @@ function setFormClickListeners() {
 	});
 	$("#add-work-btn").click();
 	$("#add-photo-btn0").click();
+	$("#add-photo-btn0").click();
+	$("#add-photo-btn0").click();
 }
 
 function makeAndShowReleaseForm() {
