@@ -30,21 +30,21 @@ type BaseForm interface {
 }
 
 type Form struct {
-	Id         bson.ObjectId `bson:"_id"`
-	FirstName  string
-	LastName   string
-	AddressOne string
-	AddressTwo string
-	City       string
-	State      string
-	Zip        string
-	Country    string
-	Email      string
-	Link       string
-	Sig        []map[string]float64
-	EmailSent  bool
-	CreatedAt  time.Time
-	UpdatedAt  time.Time
+	Id         bson.ObjectId        `bson:"_id" json:"id"` //,`json:"id"`
+	FirstName  string               `json:"first_name"`
+	LastName   string               `json:"last_name"`
+	AddressOne string               `json:"address_one"`
+	AddressTwo string               `json:"address_two"`
+	City       string               `json:"city"`
+	State      string               `json:"state"`
+	Zip        string               `json:"zip"`
+	Country    string               `json:"country"`
+	Email      string               `json:"email"`
+	Link       string               `json:"link"`
+	Sig        []map[string]float64 `json:"sig"`
+	EmailSent  bool                 `json:"email_sent"`
+	CreatedAt  time.Time            `json:"created_at"`
+	UpdatedAt  time.Time            `json:"updated_at"`
 }
 
 func (f *Form) SetId() {
@@ -86,7 +86,7 @@ func (f *Form) GetSignature() []map[string]float64 {
 
 type ArtistForm struct {
 	Form  `bson:",inline"`
-	Works []Work `bson:"works"`
+	Works []Work `bson:"works" json:"works"`
 }
 
 func (a *ArtistForm) IsArtist() bool {
@@ -210,7 +210,7 @@ func (a *ArtistForm) SetWorks(form map[string][]string) {
 
 type ModelForm struct {
 	Form   `bson:",inline"`
-	WorkId string
+	WorkId string `json:"work_id"`
 }
 
 func (m *ModelForm) IsArtist() bool {
@@ -239,14 +239,14 @@ func (m *ModelForm) GetDataAsString() string {
 }
 
 type Work struct {
-	Id          bson.ObjectId `bson:"_id"`
-	ContentId   string
-	Name        string
-	Description string
-	Extra       string
-	Photos      []Photo `bson:"photos"`
-	CreatedAt   time.Time
-	UpdatedAt   time.Time
+	Id          bson.ObjectId `bson:"_id" json:"id"`
+	ContentId   string        `json:"content_id"`
+	Name        string        `json:"name"`
+	Description string        `json:"description"`
+	Extra       string        `json:"extra"`
+	Photos      []Photo       `bson:"photos" json:"photos"`
+	CreatedAt   time.Time     `json:"created_at"`
+	UpdatedAt   time.Time     `json:"updated_at"`
 }
 
 func (w *Work) SetId() {
@@ -283,12 +283,12 @@ func (w *Work) SetPhotos(form map[string][]string, workIndex int) {
 }
 
 type Photo struct {
-	Id        bson.ObjectId `bson:"_id"`
-	Name      string
-	WorkId    string
-	Models    []ModelForm `bson:"models"`
-	CreatedAt time.Time
-	UpdatedAt time.Time
+	Id        bson.ObjectId `bson:"_id" json:"id"`
+	Name      string        `json:"name"`
+	WorkId    string        `json:"work_id"`
+	Models    []ModelForm   `bson:"models" json:"models"`
+	CreatedAt time.Time     `json:"created_at"`
+	UpdatedAt time.Time     `json:"updated_at"`
 }
 
 func (p *Photo) SetId() {
