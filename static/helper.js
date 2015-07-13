@@ -15,6 +15,7 @@ var workSnippet = function(index) {
          	<textarea class=\"form-control\" name=\"extraForWork" +index+ "\" id=\"extraForWork" +index+ "\" placeholder=\"Notes...\"></textarea>\
          </div>\
          <button id=\"add-photo-btn" +index+ "\" type=\"Button\" class=\"btn btn-default\">+ Add File</button>\
+         <label for=\"add-photo-btn\">This is to be an itemized list of all files in your download link</label>\
        </div>\
      </div>";
 }
@@ -25,7 +26,7 @@ var photoSnippet = function(workIndex, photoIndex) {
 	   <div id=\"photoWrapper" +index+ "\" class=\"wrapper form-inline\">\
 	     <div class=\"form-group\">\
 	       <label for=\"nameOfPhoto" +index+ "\">File Name</label>\
-	       <input type=\"text\" class=\"form-control file-name"+workIndex+"\" data-parsley-required=\"true\" name=\"nameOfPhoto" +index+ "\"id=\"nameOfPhoto" +index+ "\" placeholder=\"Name of Photo\">\
+	       <input type=\"text\" class=\"form-control file-name"+workIndex+"\" data-parsley-required=\"true\" name=\"nameOfPhoto" +index+ "\"id=\"nameOfPhoto" +index+ "\" placeholder=\"ie: photo1.jpg\">\
 	     </div>\
 	     <div class=\"form-group\">\
          	<label for=\"add-model-btn" +index+ "\" class=\"wrapper form-inline text-warning\">If applicable:</label>\
@@ -106,6 +107,7 @@ function setFormClickListeners() {
 		workIndex++;			
 	});
 	$("#add-work-btn").click();
+	$("#add-photo-btn0").click();
 }
 
 function makeAndShowReleaseForm() {
