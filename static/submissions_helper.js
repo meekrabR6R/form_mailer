@@ -42,7 +42,6 @@ function getAllSubmissions() {
   					tableBody += worksBody + "<td style=\"word-wrap: break-word\">N/A</td>\
                     	          <td style=\"word-wrap: break-word\">N/A</td>\
                         	      <td style=\"word-wrap: break-word\">"+work['extra']+"</td>\
-                            	  <td style=\"word-wrap: break-word\">blahblah</td></tr>\
                             	  <td style=\"word-wrap: break-word\">N/A</td>\
                     	          <td style=\"word-wrap: break-word\">N/A</td>\
                     			  <td style=\"word-wrap: break-word\">N/A</td>\
