@@ -21,34 +21,48 @@ function getAllSubmissions() {
   				var photosBody = ""
   				if (work['photos'].length > 0) {
   					$.each(work['photos'], function(k, photo) {	
-                  		photosBody = worksBody + "<td style=\"word-wrap: break-word\">"+photo['name']+"</td>\
-						              <td style=\"word-wrap: break-word\">"+photo['title']+"</td>\
-						              <td style=\"word-wrap: break-word\">"+work['extra']+"</td>";
+                  		photosBody = worksBody + "<td style=\"word-wrap: break-word\">"+photo['name']+"</td>";
+                  		if (photo['title'].length > 0) {
+							photosBody += "<td style=\"word-wrap: break-word\">"+photo['title']+"</td>"
+						} else {
+							photosBody += "<td style=\"word-wrap: break-word\">-</td>"
+						}
+						photosBody += "<td style=\"word-wrap: break-word\">"+work['extra']+"</td>";
                         var modelsBody = ""
                         if (photo['models'].length > 0) {
                         	$.each(photo['models'], function(l, model) {
                     			tableBody += photosBody + "<td style=\"word-wrap: break-word\">"+model['first_name']+"</td>\
                     			              <td style=\"word-wrap: break-word\">"+model['last_name']+"</td>\
-                    			              <td style=\"word-wrap: break-word\">"+model['email']+"</td>\
-                        					  <td style=\"word-wrap: break-word\">"+model['address_one']+ " " + model['address_two'] + ",\
-	  				                                                              "+model['city']+ " " + model['state'] + "\
-	  				                                                              "+model['zip']+ " " + model['country']+ "</td></tr>";
+                    			              <td style=\"word-wrap: break-word\">"+model['email']+"</td>";
+                    			
+                    			if (model['address_one'].length > 0) {
+                    				console.log(model['address_one'])
+    						  		tableBody += "<td style=\"word-wrap: break-word\">"+model['address_one']+ " \
+    						  		                                    "+ model['address_two'] + ",\
+                                                                        "+model['city']+ " " + model['state'] + " \
+                                                                        "+model['zip']+ " " + model['country']+ "</td></tr>";
+                    			} else {
+                    			          tableBody += "<td style=\"word-wrap: break-word\">-</td></tr>";
+                    			}
+                        			
                         	});	
                         } else {
                         	tableBody += photosBody + "<td style=\"word-wrap: break-word\">N/A</td>\
-                    	                  <td style=\"word-wrap: break-word\">N/A</td>\
-                    			          <td style=\"word-wrap: break-word\">N/A</td>\
-                        				  <td style=\"word-wrap: break-word\">N/A</td></tr>";
+                    	                  <td style=\"word-wrap: break-word\">-</td>\
+                    			          <td style=\"word-wrap: break-word\">-</td>\
+                        				  <td style=\"word-wrap: break-word\">-</td>\
+                        				  <td style=\"word-wrap: break-word\">-</td></tr>";
                         }
   					});
   				} else {
   					tableBody += worksBody + "<td style=\"word-wrap: break-word\">N/A</td>\
-                    	          <td style=\"word-wrap: break-word\">N/A</td>\
+                    	          <td style=\"word-wrap: break-word\">-</td>\
                         	      <td style=\"word-wrap: break-word\">"+work['extra']+"</td>\
-                            	  <td style=\"word-wrap: break-word\">N/A</td>\
-                    	          <td style=\"word-wrap: break-word\">N/A</td>\
-                    			  <td style=\"word-wrap: break-word\">N/A</td>\
-                        		  <td style=\"word-wrap: break-word\">N/A</td></tr>";
+                            	  <td style=\"word-wrap: break-word\">-</td>\
+                    	          <td style=\"word-wrap: break-word\">-</td>\
+                    			  <td style=\"word-wrap: break-word\">-</td>\
+                    			  <td style=\"word-wrap: break-word\">-</td>\
+                        		  <td style=\"word-wrap: break-word\">-</td></tr>";
   				}
   			});
 		});
