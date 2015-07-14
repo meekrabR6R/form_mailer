@@ -60,3 +60,7 @@ textarea.parsley-error {
     padding: 20px;
     text-align: left;
 }
+
+#make_csv {
+    margin-bottom: 15px;
+}

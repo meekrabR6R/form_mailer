@@ -1,26 +1,29 @@
 
+/**
+* Brutally ugly helper function for generating html table of artists/models
+*/
 function getAllSubmissions() {
 	$.getJSON( "/forms_json", function(json) {
   		var tableBody = ""
   		$.each( json, function(i, form) {
   			var artistBody = "<tr><td style=\"word-wrap: break-word\">"+form['updated_at']+"</td>\
-	  				                                      <td style=\"word-wrap: break-word\">"+form['first_name']+"</td>\
-	  				                                      <td style=\"word-wrap: break-word\">"+form['last_name']+"</td>\
-	  				                                      <td style=\"word-wrap: break-word\">"+form['email']+"</td>\
-	  				                                      <td style=\"word-wrap: break-word\">"+form['address_one']+ " " + form['address_two'] + ",\
-	  				                                                                          "+ form['city']+ " " + form['state'] + "\
-	  				                                                                          "+ form['zip']+ " " + form['country']+ "</td>\
-	  				                                      <td style=\"word-wrap: break-word\">"+form['link']+"</td>";
+	  		                  <td style=\"word-wrap: break-word\">"+form['first_name']+"</td>\
+	  		                  <td style=\"word-wrap: break-word\">"+form['last_name']+"</td>\
+	  		                  <td style=\"word-wrap: break-word\">"+form['email']+"</td>\
+          	                  <td style=\"word-wrap: break-word\">"+form['address_one']+ " " + form['address_two'] + ",\
+                                              "+ form['city']+ " " + form['state'] + "\
+                                              "+ form['zip']+ " " + form['country']+ "</td>\
+          	                  <td style=\"word-wrap: break-word\">"+form['link']+"</td>";
   			var worksBody = ""
   			$.each(form['works'], function(j, work) {
   				worksBody = artistBody + "<td style=\"word-wrap: break-word\">"+work['name']+"</td>\
-                                <td style=\"word-wrap: break-word\">"+work['description']+"</td>";
+				            <td style=\"word-wrap: break-word\">"+work['description']+"</td>";
   				var photosBody = ""
   				if (work['photos'].length > 0) {
   					$.each(work['photos'], function(k, photo) {	
                   		photosBody = worksBody + "<td style=\"word-wrap: break-word\">"+photo['name']+"</td>\
-                    		          <td style=\"word-wrap: break-word\">"+photo['name']+"</td>\
-                        		      <td style=\"word-wrap: break-word\">"+work['extra']+"</td>";
+						              <td style=\"word-wrap: break-word\">"+photo['name']+"</td>\
+						              <td style=\"word-wrap: break-word\">"+work['extra']+"</td>";
                         var modelsBody = ""
                         if (photo['models'].length > 0) {
                         	$.each(photo['models'], function(l, model) {
@@ -52,6 +55,14 @@ function getAllSubmissions() {
 		$("#submissions_table tbody").append(tableBody)
 	});
 }
+
+/**
+* Generate CSV from table
+*/
+$("#make_csv").click(function() {
+	var csv = $('#submissions_table').table2CSV({delivery:'value'});
+	this.href="data:application/octet-stream," +encodeURIComponent(csv);	
+})
 
 $(document).ready(function() {
 	getAllSubmissions();
