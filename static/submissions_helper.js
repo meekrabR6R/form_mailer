@@ -13,7 +13,7 @@ function getAllSubmissions() {
           	                  <td style=\"word-wrap: break-word\">"+form['address_one']+ " " + form['address_two'] + ",\
                                               "+ form['city']+ " " + form['state'] + "\
                                               "+ form['zip']+ " " + form['country']+ "</td>\
-          	                  <td style=\"word-wrap: break-word\">"+form['link']+"</td>";
+          	                  <td style=\"word-wrap: break-word\"><a href=\""+form['link']+"\">"+form['link']+"</td>";
   			var worksBody = ""
   			$.each(form['works'], function(j, work) {
   				worksBody = artistBody + "<td style=\"word-wrap: break-word\">"+work['name']+"</td>\
