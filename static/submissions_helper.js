@@ -22,7 +22,7 @@ function getAllSubmissions() {
   				if (work['photos'].length > 0) {
   					$.each(work['photos'], function(k, photo) {	
                   		photosBody = worksBody + "<td style=\"word-wrap: break-word\">"+photo['name']+"</td>\
-						              <td style=\"word-wrap: break-word\">"+photo['name']+"</td>\
+						              <td style=\"word-wrap: break-word\">"+photo['title']+"</td>\
 						              <td style=\"word-wrap: break-word\">"+work['extra']+"</td>";
                         var modelsBody = ""
                         if (photo['models'].length > 0) {

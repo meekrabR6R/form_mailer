@@ -29,6 +29,10 @@ var photoSnippet = function(workIndex, photoIndex) {
 	       <input type=\"text\" class=\"form-control file-name"+workIndex+"\" data-parsley-required=\"true\" name=\"nameOfPhoto" +index+ "\"id=\"nameOfPhoto" +index+ "\" placeholder=\"ie: photo1.jpg\">\
 	     </div>\
 	     <div class=\"form-group\">\
+	       <label for=\"titleOfPhoto" +index+ "\">File Title</label>\
+	       <input type=\"text\" class=\"form-control file-title"+workIndex+"\" data-parsley-required=\"true\" name=\"titleOfPhoto" +index+ "\"id=\"titleOfPhoto" +index+ "\" placeholder=\"ie: Photo of the Moon\">\
+	     </div>\
+	     <div class=\"form-group\">\
          	<label for=\"add-model-btn" +index+ "\" class=\"wrapper form-inline text-warning\">If applicable:</label>\
          	<button id=\"add-model-btn" +index+ "\" type=\"Button\" class=\"btn btn-default\">+ Add Model</button>\
 	     </div>\

@@ -274,6 +274,7 @@ func (w *Work) SetPhotos(form map[string][]string, workIndex int) {
 	for i, e := range photoIndices {
 		w.Photos[i] = Photo{
 			Name:   form[fmt.Sprintf("nameOfPhoto%d%d", workIndex, e)][0],
+			Title:  form[fmt.Sprintf("titleOfPhoto%d%d", workIndex, e)][0],
 			WorkId: w.ContentId,
 		}
 
@@ -285,6 +286,7 @@ func (w *Work) SetPhotos(form map[string][]string, workIndex int) {
 type Photo struct {
 	Id        bson.ObjectId `bson:"_id" json:"id"`
 	Name      string        `json:"name"`
+	Title     string        `json:"title"`
 	WorkId    string        `json:"work_id"`
 	Models    []ModelForm   `bson:"models" json:"models"`
 	CreatedAt time.Time     `json:"created_at"`
