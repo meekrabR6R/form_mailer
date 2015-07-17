@@ -76,15 +76,13 @@ func makeModelPDF(form BaseForm) {
 
 func makeArtistPDF(form *ArtistForm) {
 	pdf := makeAPDF(form, 100, 985)
-
+	pdf = writeSig(pdf, form, 100, 1025)
 	//bod := fmt.Sprintf("%-15s%-15s%-15s%-15s%-15s%-15s\n\n", "DATE",
 	//	"PROJECT NAME", "DESCRIP", "FILE NAME", "MODEL NAME",
 	//	"ADDITIONAL INFO")
 	pdf.AddPage()
-	pdf.Text(10, 5, "Page 2")
-	pdf.Write(3, "Content:")
 	pdf.SetFont("Times", "B", 7)
-	pdf.SetY(15)
+	pdf.SetY(25)
 	pdf.CellFormat(18, 10, "DATE", "1", 0, "L", false, 0, "")
 	pdf.CellFormat(60, 10, "PROJECT NAME", "1", 0, "L", false, 0, "")
 	//pdf.CellFormat(30, 10, "DESCRIP", "1", 0, "L", false, 0, "")
@@ -93,7 +91,8 @@ func makeArtistPDF(form *ArtistForm) {
 	//pdf.CellFormat(40, 10, "ADDITIONAL INFO", "1", 0, "L", false, 0, "")
 
 	var x float64 = 10
-	var y float64 = 25
+	var y float64 = 35
+
 	const layout = "Jan 2, 2006"
 	for _, work := range form.Works {
 		if len(work.Photos) > 0 {
@@ -124,10 +123,9 @@ func makeArtistPDF(form *ArtistForm) {
 		}
 	}
 
-	pdf.SetXY(x, y+5)
-	y = ((y + 15) * 4) + 70
+	pdf.SetXY(x, y)
+	//y = ((y + 15) * 4) //+ 70
 	x = x + 75
-	pdf = writeSig(pdf, form, x, y)
 
 	//pdf.MultiCell(185, 5, bod, "", "", false)
 
@@ -156,9 +154,20 @@ func makeAPDF(form BaseForm, x float64, y float64) *gofpdf.Fpdf {
 	//const layout = "Jan 2, 2006 at 3:04pm (MST)"
 	//t := time.Now()
 	//hacky formtting... but i'm so tired..
-	pdfBody := fmt.Sprintf("Page 1\n\n%s\n\n%s", title, body)
 
 	pdf := gofpdf.New("P", "mm", "A4", "../font")
+	pdfBody := fmt.Sprintf("Page 1\n\n%s\n\n%s", title, body)
+
+	pdf.SetHeaderFunc(func() {
+		pageNum := pdf.PageNo()
+
+		if pageNum == 2 {
+			pdf.Write(3, fmt.Sprintf("Page %d\n\nContent:\n\n", pdf.PageNo()))
+		} else {
+			pdf.Write(3, fmt.Sprintf("Page %d\n\n", pdf.PageNo()))
+		}
+	})
+
 	pdf.AddPage()
 	pdf.SetFont("Times", "B", 10)
 
@@ -180,6 +189,8 @@ func writeSig(pdf *gofpdf.Fpdf, form BaseForm, x float64, y float64) *gofpdf.Fpd
 		t.Format(layout))
 
 	pdf.Write(4, pdfBody)
+
+	fmt.Println("WHY:: %d", y)
 	//write sig
 	for i := 0; i < len(form.GetSignature()); i++ {
 		dot := form.GetSignature()[i]
