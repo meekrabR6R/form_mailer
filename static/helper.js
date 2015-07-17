@@ -41,7 +41,7 @@ var photoSnippet = function(workIndex, photoIndex) {
 }
 
 var modelSnippet = function(workIndex, photoIndex, modelIndex) {
-	var index = workIndex.toString()+""+photoIndex.toString()+""+modelIndex.toString();
+	var index = workIndex.toString()+""+photoIndex.toString()+"-"+modelIndex.toString();
 	return "<div id=\"modelWrapper" +index+ "\" class=\"added wrapper form-inline\">\
 	          <div class=\"form-group\">\
 	            <label for=\"firstNameOfModel" +index+ "\">First Name</label>\
