@@ -312,18 +312,19 @@ func (p *Photo) SetUpdatedAt() {
 func (p *Photo) SetModels(form map[string][]string, workIndex int,
 	photoIndex int) {
 
-	filter := fmt.Sprintf("firstNameOfModel%d%d", workIndex, photoIndex)
+	filter := fmt.Sprintf("firstNameOfModel%d%d-", workIndex, photoIndex)
 	numItems := getItemCount(filter, form)
 	modelIndices := getIndices(filter, form)
 	p.Models = make([]ModelForm, numItems)
+
 	for i, e := range modelIndices {
 		p.Models[i] = ModelForm{
 			Form: Form{
-				FirstName: form[fmt.Sprintf("firstNameOfModel%d%d%d",
+				FirstName: form[fmt.Sprintf("firstNameOfModel%d%d-%d",
 					workIndex, photoIndex, e)][0],
-				LastName: form[fmt.Sprintf("lastNameOfModel%d%d%d",
+				LastName: form[fmt.Sprintf("lastNameOfModel%d%d-%d",
 					workIndex, photoIndex, e)][0],
-				Email: form[fmt.Sprintf("emailOfModel%d%d%d",
+				Email: form[fmt.Sprintf("emailOfModel%d%d-%d",
 					workIndex, photoIndex, e)][0],
 			},
 		}
