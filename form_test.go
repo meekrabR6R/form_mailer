@@ -6,30 +6,41 @@ import (
 )
 
 var item1 = map[string][]string{
-	"firstName":           []string{"Nick"},
-	"lastName":            []string{"Mujanjo"},
-	"addressOne":          []string{"123 ABC Dr."},
-	"addressTwo":          []string{""},
-	"city":                []string{"Raleigh"},
-	"state":               []string{"NC"},
-	"zip":                 []string{"27614"},
-	"country":             []string{"US"},
-	"emailAddress":        []string{"freddy@aol.com"},
-	"downloadLink":        []string{"http://www.dropbox.com/myawesomestuff"},
-	"output":              []string{"[{ \"lx\" : 122, \"ly\" : 31, \"mx\" : 122, \"my\" : 30 }]"},
-	"descOfWork1":         []string{"Blob"},
-	"descOfWork3":         []string{"Slob"},
-	"descOfWork5":         []string{"Corn on the cob"},
-	"extraForWork1":       []string{""},
-	"extraForWork3":       []string{""},
-	"extraForWork5":       []string{""},
-	"nameOfWork1":         []string{"Pic of Blob"},
-	"nameOfWork3":         []string{"Pic of Slob"},
-	"nameOfWork5":         []string{"Pic of Corn on the cob"},
-	"nameOfPhoto10":       []string{"Photo of Blob"},
-	"firstNameOfModel100": []string{"Troy"},
-	"lastNameOfModel100":  []string{"McClure"},
-	"emailOfModel100":     []string{"troy@mcclure.com"},
+	"firstName":             []string{"Nick"},
+	"lastName":              []string{"Mujanjo"},
+	"addressOne":            []string{"123 ABC Dr."},
+	"addressTwo":            []string{""},
+	"city":                  []string{"Raleigh"},
+	"state":                 []string{"NC"},
+	"zip":                   []string{"27614"},
+	"country":               []string{"US"},
+	"emailAddress":          []string{"freddy@aol.com"},
+	"downloadLink":          []string{"http://www.dropbox.com/myawesomestuff"},
+	"output":                []string{"[{ \"lx\" : 122, \"ly\" : 31, \"mx\" : 122, \"my\" : 30 }]"},
+	"descOfWork1":           []string{"Blob"},
+	"descOfWork3":           []string{"Slob"},
+	"descOfWork5":           []string{"Corn on the cob"},
+	"extraForWork1":         []string{""},
+	"extraForWork3":         []string{""},
+	"extraForWork5":         []string{""},
+	"nameOfWork1":           []string{"Pic of Blob"},
+	"nameOfWork3":           []string{"Pic of Slob"},
+	"nameOfWork5":           []string{"Pic of Corn on the cob"},
+	"nameOfPhoto10":         []string{"blob.png"},
+	"titleOfPhoto10":        []string{"Photo of Blob"},
+	"firstNameOfModel10-0":  []string{"Troy"},
+	"lastNameOfModel10-0":   []string{"McClure"},
+	"emailOfModel10-0":      []string{"troy@mcclure.com"},
+	"nameOfPhoto11":         []string{"plop.png"},
+	"titleOfPhoto11":        []string{"Photo of Plop"},
+	"firstNameOfModel11-0":  []string{"Shooter"},
+	"lastNameOfModel11-0":   []string{"McGavin"},
+	"emailOfModel11-0":      []string{"gavin@mcgavin.com"},
+	"nameOfPhoto110":        []string{"plop.png"},
+	"titleOfPhoto110":       []string{"Photo of Plop"},
+	"firstNameOfModel110-0": []string{"Tracy"},
+	"lastNameOfModel110-0":  []string{"Jordan"},
+	"emailOfModel110-0":     []string{"tracy@jordan.com"},
 }
 
 /**
@@ -38,6 +49,34 @@ var item1 = map[string][]string{
 func TestGetItemCount(t *testing.T) {
 	var workCountOfThree = getItemCount("descOfWork", item1)
 	var workCountOfZero = getItemCount("fart", item1)
+	var photoCount = getItemCount("nameOfPhoto1", item1)
+	var modelCount11 = getItemCount("firstNameOfModel11-", item1)
+	var modelCount110 = getItemCount("firstNameOfModel110-", item1)
+	var modelCount100 = getItemCount("firstNameOfModel10-", item1)
+
+	if photoCount != 3 {
+		t.Error("For", item1,
+			"expected", 3,
+			"got", photoCount)
+	}
+
+	if modelCount11 != 1 {
+		t.Error("For", item1,
+			"expected", 1,
+			"got", modelCount11)
+	}
+
+	if modelCount110 != 1 {
+		t.Error("For", item1,
+			"expected", 1,
+			"got", modelCount110)
+	}
+
+	if modelCount100 != 1 {
+		t.Error("For", item1,
+			"expected", 1,
+			"got", modelCount100)
+	}
 
 	if workCountOfThree != 3 {
 		t.Error("For", item1,
@@ -167,10 +206,16 @@ func TestMakeArtistForm(t *testing.T) {
 			"got", artistForm.Works[2].Name)
 	}
 
-	if artistForm.Works[0].Photos[0].Name != "Photo of Blob" {
+	if artistForm.Works[0].Photos[0].Name != "blob.png" {
+		t.Error("For", artistForm.Works[0].Photos[0],
+			"expected", "blob.png",
+			"got", artistForm.Works[0].Photos[0].Name)
+	}
+
+	if artistForm.Works[0].Photos[0].Title != "Photo of Blob" {
 		t.Error("For", artistForm.Works[0].Photos[0],
 			"expected", "Photo of Blob",
-			"got", artistForm.Works[0].Photos[0].Name)
+			"got", artistForm.Works[0].Photos[0].Title)
 	}
 
 	if artistForm.Works[0].Photos[0].Models[0].FirstName != "Troy" {
